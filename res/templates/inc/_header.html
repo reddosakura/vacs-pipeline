@@ -1,0 +1,37 @@
+<div class="nav-header d-flex justify-content-lg-between h-10">
+    <div id="nav-header-id" class="d-flex justify-content-evenly internal-btn">
+        {% if role == "superuser" %}
+            {% set color = "superuser" %}
+            <a class="header-item align-self-center rounded-4 text-center btn m-3" type="button" href='/sudpapp/users'>ПОЛЬЗОВАТЕЛИ</a>
+            <a class="header-item align-self-center rounded-4 text-center btn m-3 text-nowrap" type="button" href='/sudpapp/requests/my'>ТЕКУЩИЕ ЗАЯВКИ</a>
+            <a class="header-item align-self-center rounded-4 text-center btn m-3" type="button" href='/sudpapp/proc'>ОБРАБОТКА</a>
+            <a class="header-item align-self-center rounded-4 text-center btn m-3 text-nowrap" type="button" href='/sudpapp/passages'>ОТЧЕТ ПО ПРОХОДАМ</a>
+            <a class="header-item align-self-center rounded-4 text-center btn m-3 text-nowrap" type="button" href='/sudpapp/reports'>ОТЧЕТ ПО ЗАЯВКАМ</a>
+            <a class="header-item align-self-center rounded-4 text-center btn m-3" type="button" href='/sudpapp/monitoring'>МОНИТОРИНГ</a>
+        {% elif role == "admin" or role == "limited_admin" %}
+            {% set color = "admin" if role == "admin" else "limadmin" %}
+            <a class="header-item align-self-center rounded-4 text-center btn m-3 text-nowrap" type="button" href='/sudpapp/requests/my'>ТЕКУЩИЕ ЗАЯВКИ</a>
+            <a class="header-item align-self-center rounded-4 text-center btn m-3" type="button" href='/sudpapp/proc'>ОБРАБОТКА</a>
+            <a class="header-item align-self-center rounded-4 text-center btn m-3 text-nowrap" type="button" href='/sudpapp/passages'>ОТЧЕТ ПО ПРОХОДАМ</a>
+            <a class="header-item align-self-center rounded-4 text-center btn m-3 text-nowrap" type="button" href='/sudpapp/reports'>ОТЧЕТ ПО ЗАЯВКАМ</a>
+            <a class="header-item align-self-center rounded-4 text-center btn m-3" type="button" href='/sudpapp/monitoring'>МОНИТОРИНГ</a>
+        {% elif role == "requester" %}
+            {% set color = "requester" %}
+            <div class="col d-flex align-content-center ps-3">
+                <img src="{{ url_for('static', path='/res/svg/logo.svg') }}" class="img-fluid  w-80 " alt="">
+            </div>
+        {% elif role == "monitoring" %}
+            {% set color = "monitoring" %}
+            <div class="col d-flex align-content-center ps-3">
+                <img src="{{ url_for('static', path='/res/svg/logo.svg') }}" class="img-fluid  w-80 " alt="">
+            </div>
+        {% endif %}
+    </div>
+    <div class="d-flex align-content-center">
+        <svg onclick="$('#userProfileModal').modal('show');" class="{{ color }} img-fluid w-75" viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="21.5" cy="21.5" r="20.5" stroke="black" stroke-width="2"/>
+            <circle cx="21" cy="14" r="7" fill="black"/>
+            <path d="M18.6806 22.9722C20.1643 22.3503 21.8357 22.3503 23.3194 22.9722L27.5259 24.7354C30.6345 26.0384 31.9116 29.7608 30.2575 32.6978V32.6978C29.259 34.4707 27.3823 35.5676 25.3475 35.5676H16.6525C14.6177 35.5676 12.741 34.4707 11.7425 32.6978V32.6978C10.0884 29.7608 11.3655 26.0384 14.4741 24.7354L18.6806 22.9722Z" fill="black"/>
+        </svg>
+    </div>
+</div>

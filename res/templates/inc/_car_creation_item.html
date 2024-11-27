@@ -1,0 +1,26 @@
+<div class="car-subform container text-label rounded-4 mb-2 m-0">
+    <div class="row p-1">
+        <div class="col w-25 rounded-4 d-flex p-0">
+            <div class="w-100 p-1">
+                {{ c_id }}
+                <div class="form-floating">
+                    {{ carmodel }}
+                    <label class="text-truncate mw-100" for="{{ carmodel.name }}">МОДЕЛЬ<span class="text-danger">*</span></label>
+                </div>
+            </div>
+        </div>
+        <div class="col w-25 rounded-4 d-flex p-0">
+            <div class="w-100 p-1">
+                <div class="form-floating">
+                    {{ govern_num }}
+                    <label class="text-truncate mw-100" for="{{ govern_num.name }}">ГОС. НОМЕР<span class="text-danger">*</span></label>
+                </div>
+            </div>
+        </div>
+        <div class="col w-25 p-1">
+            <div class="h-100 internal-btn">
+                <input class="remove-car-subform rounded-4 fs-6 w-100 h-100 regular-btn" type="button" value="УДАЛИТЬ">
+            </div>
+        </div>
+    </div>
+</div>

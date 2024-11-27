@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Ошибка</title>
+    <link href="{{ url_for('static', path='/lib/bootstrap-5.3.3-dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet">
+        <link rel="shortcut icon" href="{{ url_for('static', path='/res/favicon.ico') }}">
+</head>
+<body>
+
+    <div class="d-flex flex-column align-items-center justify-items-center m-4">
+        <div class="justify-content-center">
+            <img src="{{ url_for('static', path='/res/svg/logo.svg') }}" class="img-fluid " alt="">
+        </div>
+        <div  class="d-flex justify-content-center internal-btn">
+            <input class="rounded-4 btn m-3 fs-2" type="button" onclick="window.location='/sudpapp/auth';" value="ПЕРЕЙТИ НА СТРАНИЦУ АВТОРИЗАЦИИ">
+        </div>
+        <div class="fs-5 border border-3 rounded-4 p-4 border-black w-100 mb-4">
+            <p class="option-font fs-1">Отчет об ошибке:</p>
+            <p class="option-font fs-2">Дата и время: <span class="text-danger">{{ date }}</span></p>
+            <p class="option-font fs-2">Клиент: <span class="text-danger">{{ ip }}</span></p>
+            <p class="option-font fs-2">Название ошибки: <span class="text-danger">{{ exc }}</span></p>
+            <p class="option-font fs-2">URL: <span class="text-danger">{{ url }}</span></p>
+            <p class="option-font fs-2">Метод: <span class="text-danger">{{ method }}</span></p>
+            <pre class=" option-font fs-2">Заголовки запроса: <span class="text-secondary">{{ json }}</span></pre>
+            <a class="regular-btn border border-black border-2 p-2 rounded-4 fs-3" onclick="this.href='data:text/html;charset=UTF-8,'+encodeURIComponent(document.documentElement.outerHTML)"
+               href="#" download="report.html">СКАЧАТЬ ОТЧЕТ</a>
+        </div>
+        <div class="fs-5 border border-3 rounded-4 p-4 border-black w-100 mb-3">
+            <p class="option-font fs-1">Трассировка стека:</p>
+            <pre class="option-font">{{ error }}</pre>
+        </div>
+    </div>
+
+<script>
+</script>
+</body>
+</html>

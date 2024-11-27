@@ -1,0 +1,405 @@
+{% extends 'base.html' %}
+{% block additional_res %}
+	<script src="{{ url_for('static', path='/js/collapse.js') }}"></script>
+    <script src="{{ url_for('static', path='/lib/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', path='/lib/markjs/mark.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/jquery.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            let tooltipList = tooltipTriggerList.map(function(element){
+                return new bootstrap.Tooltip(element);
+            });
+        });
+    </script>
+
+    <script>
+        // event fires, if the user leaves the page
+    window.addEventListener("beforeunload", () => {
+      // save an item to the users local storage
+      localStorage.setItem(
+        "scrollPosition", // item name/key
+        document.querySelector("table").scrollTop // item value (scroll top position in this case)
+      );
+    });
+    </script>
+    <script>
+      
+        window.addEventListener("load", () => {
+          // setting scrollTop of container to:
+          document.querySelector("table").scrollTop =
+            // whatever value the item with name/key scrollPosition in the local storage holds
+            localStorage.getItem("scrollPosition") || 1000; // or if it's not set, simply use 0 as fallback
+        });
+    </script>
+
+    <script>
+        function getCookieValue(name) 
+        {
+          const regex = new RegExp(`(^| )${name}=([^;]+)`)
+          const match = document.cookie.match(regex)
+          if (match) {
+            return match[2]
+          }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URL(location).searchParams;
+            const sudp_request = urlParams.get('request');
+            if (sudp_request) {
+                $('#passageModal').modal('show');
+                var instance = new Mark(document.querySelector("#passageModal"));
+        
+                instance.unmark();
+                instance.mark(getCookieValue("search_value"), {
+                  "exclude": [
+                    ".creator",
+                    ".req-comment",
+                    ".header"
+                  ],
+                  "element": "span",
+                  "className": "elem-highlight",
+                  "separateWordSearch": false
+                });
+                document.cookie = "search_value=; SameSite=Lax;";
+            }
+
+            const search_value = urlParams.get('search');
+            if (search_value) {
+              const table = document.querySelector(".table-clickable");
+                for (const currentRow of table.rows) {
+                  currentRow.onclick = createClickHandler(currentRow);
+                }
+            }
+        })
+    </script>
+
+{% endblock %}
+{% block content %}
+    <div class="m-0 d-flex flex-fill max-h p-2">
+        <div class="d-flex flex-fill column-gap-2 flex-nowrap">
+            <div class="d-flex flex-fill w-70 visual-block m-0">
+                <div class="flex-fill mw-100 justify-content-center flex-column m-2 p-0">
+
+                    <div class="container-fluid p-0">
+                      <div class="row h-10 m-0 gap-2">
+                          <div class="col-2 d-flex p-0 internal-btn">
+                              <input class="rounded-4 regular-btn w-100" type="button" value="ОБНОВИТЬ" onclick="window.location='/sudpapp/monitoring'">
+                          </div>
+                          <div class="col p-0">
+                            <input placeholder="ПОИСК" autofocus class="rounded-4 regular-input text-m" id="search" name="search_field" type="text" value="">
+                          </div>
+
+                      </div>
+                    </div>
+                    <div class="m-0 mt-2 position-fixed d-flex w-60 h-80 d-block">
+                        <div class="p-0 pb-1 overflow-auto">
+                            <table id="monitoringTable" class="text-m z-2 table-clickable search-table-content">
+                                <thead>
+                                    <tr>
+                                      <th class="header text-truncate" scope="col" >№</th>
+                                      <th class="header text-truncate" scope="col" >ФАМИЛИЯ ИМЯ ОТЧЕСТВО</th>
+                                      <th class="header text-truncate" scope="col" >АВТОМОБИЛИ</th>
+                                      <th class="header text-truncate" scope="col" >КОММЕНТАРИЙ</th>
+                                        <th class="header text-truncate" scope="col" >ТИП<br>ЗАЯВКИ</th>
+                                        <th class="header text-truncate" scope="col" >С ДАТЫ</th>
+                                        <th class="header text-truncate" scope="col" >ПО ДАТУ</th>
+                                        <th class="header text-truncate" scope="col" >ВРЕМЕННОЙ<br>ИНТЕРВАЛ</th>
+                                        <th class="header text-truncate" scope="col" >ДОГОВОР</th>
+                                        <th class="header text-truncate" scope="col" >ОРГАНИЗАЦИЯ</th>
+                                        <th class="header text-truncate" scope="col" >СОЗДАТЕЛЬ<br>ЗАЯВКИ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for actual_request in actual_requests %}
+                                    {% with req_id=actual_request['id'],
+                                    req_type=actual_request['type'],
+                                    req_status=actual_request['status'],
+                                    req_comment = actual_request['comment'],
+                                    visitors=actual_request['visitor'],
+                                    cars=actual_request['car'],
+                                    from_date=actual_request['from_date'],
+                                    to_date=actual_request['to_date'],
+                                    from_time=actual_request['from_time'],
+                                    to_time=actual_request['to_time'],
+                                    contract=actual_request['contract_name'],
+                                    organization=actual_request["organization"],
+                                    creator=actual_request['creator'] %}
+
+                                        {% include 'inc/_table_row.html' %}
+
+                                    {% endwith %}
+                                {% endfor %}
+                                </tbody>
+                              </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-30 visual-block m-0">
+              <form method="post" class="p-2 d-flex flex-column">
+                <div class="col p-2">
+                    <div class="internal-btn">
+                        <input class="rounded-4 fs-6 regular-btn" type="button" value="ПРОПУСК СПЕЦТРАНСПОРТА"  data-bs-toggle="modal" data-bs-target="#specModal">
+                    </div>
+                </div>
+                <!-- <div class="row">
+                </div> -->
+                <div class="overflow-auto overflow-x-hidden pt-2 cars">
+                    {{ exit_form.csrf_token }}
+                    {% for check in exit_form.cars_on_terr_field %}
+                      {% if 'car' in check.data %}
+                        {% with check=check %}
+                            {% include 'inc/_car_exit_choice.html' %}
+                        {% endwith %}
+                      {% else %}
+                        {% with check=check %}
+                            {% include 'inc/_spectransport_exit_choice.html' %}
+                        {% endwith %}
+                      {% endif %}
+                    {% endfor %}
+                </div>
+                <!-- <div class="row">
+                </div> -->
+                <div class="col p-2">
+                    <div class=" internal-btn">
+                        {{ exit_form.exit_submit(class='rounded-4 fs-6 regular-btn') }}
+                    </div>
+                </div>
+                <!-- <div class="row align-bottom">
+                </div> -->
+              </form>
+            </div>
+        </div>
+    </div>
+        <div class="modal fade overflow-hidden post" id="passageModal" tabindex="-1" aria-labelledby="passageModal" aria-hidden="true">
+          <div class="modal-dialog centered position-fixed">
+            <div class="modal-content rounded-4 border-black border-3">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5 text-m" id="filesModalLabel">ПРОПУСК</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+              <form method="post">
+              {{ passage_form.csrf_token }}
+                <div class="row p-0">
+                    <div class="accordion" id="carVisitorsAccordion">
+                        <div class="accordion-item m-1">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                              ПОСЕТИТЕЛИ
+                            </button>
+                          </h2>
+                          <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#carVisitorsAccordion">
+                            <div class="accordion-body">
+                                <div id="visitors-checks" class="d-flex search-visitor-content flex-column overflow-x-auto mh-15-vmax">
+                                    {% for check in passage_form.visitors_radio_group %}
+                                    	{% with check=check %}
+                                            {% include 'inc/_passage_check.html' %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="accordion-item m-1">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#carCollapse" aria-expanded="true" aria-controls="carCollapse">
+                              АВТОМОБИЛИ
+                            </button>
+                          </h2>
+                          <div id="carCollapse" class="accordion-collapse collapse show" data-bs-parent="#carVisitorsAccordion">
+                            <div class="accordion-body">
+                                <div id="visitors-checks" class="d-flex search-car-content flex-column overflow-auto mh-15-vmax">
+                                    {% for check in passage_form.cars_radio_group %}
+                                    	{% with check=check, car_card="car-card" %}
+                                            {% include 'inc/_passage_check.html' %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                </div>
+                </div>
+                <div class="row p-0">
+                    <div class="internal-btn p-3">
+                        {{ passage_form.pass_submit( class="rounded-4 fs-6 regular-btn") }}
+                    </div>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        </div>
+
+        <div class="modal fade overflow-hidden" id="specModal" tabindex="-1" aria-labelledby="specModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content rounded-4 border-black border-3">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5 text-m" id="specModalLabel">ПРОПУСК СПЕЦТРАНСПОРТА</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" onsubmit="return validateForm()">
+                        {{ spectransport_form.csrf_token }}
+                        <div class="form-floating">
+                            {{ spectransport_form.model_field(class='form-control fs-4 regular-input', id='carmodel',  placeholder="Марка автомобиля") }}
+                            <label for="carmodel">МАРКА АВТОМОБИЛЯ<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="form-floating mt-3">
+                            {{ spectransport_form.govern_num_field(class='form-control fs-4 regular-input', id='governNum', placeholder="Государственный номер") }}
+                            <label class="fs-6" for="governNum">ГОСУДАРСТВЕННЫЙ НОМЕР<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="d-flex flex-column mt-2">
+                            <div class="form-check check-box">
+                                <div class="d-flex">
+                                    <input id="checkbox" class="form-check-input checkbox" type="checkbox" value="" onclick="commentCollapse()">
+                                    <label class="fs-4 ms-3 align-content-center form-check-label" for="checkbox">
+                                      УКАЗАТЬ ТИП СПЕЦТРАНСПОРТА
+                                    </label>
+                                </div>
+                            </div>
+                            {{ spectransport_form.type_field(class='form-select display-none mt-2 border-black border-3 collapse-area') }}
+                            <div class="d-flex internal-btn mt-4">
+                                {{ spectransport_form.pass_spec_submit(class='w-100 fs-5 rounded-4 regular-btn" type="button') }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="modal fade overflow-hidden" id="governNumValidationErrorModal" tabindex="-1" aria-labelledby="governNumValidationErrorModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content rounded-4 border-black border-3">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5 text-m" id="governNumValidationErrorModalLabel"><span class="text-danger">ОШИБКА</span></h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body fs-2">
+                    ГОСУДАРСТВЕННЫЙ НОМЕР АВТОМОБИЛЯ ДОЛЖЕН БЫТЬ ФОРМАТА <span class="text-danger">А777АА77</span> ИЛИ <span class="text-danger">А777АА777</span>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+
+                const createClickHandler = (row) => {
+                  return () => {
+                    const [cell] = row.getElementsByTagName("td");
+                    const id = cell.innerHTML;
+                    console.log(id);
+                    const urlParams = new URL(location).searchParams;
+                    const search_value = urlParams.get('search');
+
+                    if (search_value){
+                        window.location = `/sudpapp/monitoring?request=${id}&search=${search_value}`
+                    } else {
+                        window.location = `/sudpapp/monitoring?request=${id}`
+                    }
+                  };
+                };
+
+                const table = document.querySelector(".table-clickable");
+                for (const currentRow of table.rows) {
+                  currentRow.onclick = createClickHandler(currentRow);
+                }
+        </script>
+        <script>
+            function handleChange(checkbox) {
+
+                const current = document.getElementsByClassName("check-active");
+                if (current.length === 0) {
+                    checkbox.parentElement.className += " check-active"
+                }
+                current[0].className = current[0].className.replace(" check-active", "");
+                checkbox.parentElement.className += " check-active"
+            }
+        </script>
+    <script>
+
+        function validateForm() {
+          let governNumber = document.querySelector("#governNum");
+
+          let re = /^(([АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{1,2})(\d{2,3})|(\d{4}(?<!0000)[АВЕКМНОРСТУХ]{2})(\d{2})|(\d{3}(?<!000)(C?D|[ТНМВКЕ])\d{3}(?<!000))(\d{2}(?<!00))|([ТСК][АВЕКМНОРСТУХ]{2}\d{3}(?<!000))(\d{2})|([АВЕКМНОРСТУХ]{2}\d{3}(?<!000)[АВЕКМНОРСТУХ])(\d{2})|([АВЕКМНОРСТУХ]\d{4}(?<!0000))(\d{2})|(\d{3}(?<!000)[АВЕКМНОРСТУХ])(\d{2})|(\d{4}(?<!0000)[АВЕКМНОРСТУХ])(\d{2})|([АВЕКМНОРСТУХ]{2}\d{4}(?<!0000))(\d{2})|([АВЕКМНОРСТУХ]{2}\d{3}(?<!000))(\d{2,3})|(^Т[АВЕКМНОРСТУХ]{2}\d{3}(?<!000)\d{2,3}))/gm;
+
+          if (!re.test(governNumber.value)){
+              $('#governNumValidationErrorModal').modal('show');
+              return false;
+          }
+        }
+    </script>
+
+    <script>
+  
+      const $search = document.getElementById('search');
+  
+      $search.addEventListener('input', (event) => {
+  
+        const searchText = event.target.value;
+  
+        const cards = document.querySelectorAll(".table-row");
+
+        var instance = new Mark(document.querySelector("#monitoringTable"));
+        
+        instance.unmark();
+        instance.mark(searchText, {
+          "each": function(element) {
+            setTimeout(function() {
+              $(element).addClass("animate");
+            }, 200);
+          },
+          "exclude": [
+            ".creator",
+            ".req-comment",
+            ".header"
+          ],
+          "separateWordSearch": false
+        });
+
+        document.cookie = `search_value=${searchText}; SameSite=Lax;`;
+
+        for (let i = 0; i < cards.length; i++) {
+            const cell_lnp = cards[i].querySelector(".cell-lnp");
+            const cell_cars = cards[i].querySelector(".cell-cars");
+            const cell_contract = cards[i].querySelector(".cell-contract");
+            const cell_organisation = cards[i].querySelector(".cell-organisation");
+
+            if (!cell_lnp.textContent.includes(searchText.toUpperCase()) 
+                && !cell_cars.textContent.toUpperCase().includes(searchText.toUpperCase())
+                && !cell_contract.textContent.toUpperCase().includes(searchText.toUpperCase())
+                && !cell_organisation.textContent.toUpperCase().includes(searchText.toUpperCase())
+              ){
+                cards[i].classList.add("visually-hidden")
+            } else {
+                cards[i].classList.remove("visually-hidden")
+            }
+
+        }
+  
+      });
+    </script>
+    <script>
+      var time = new Date().getTime();
+      $(document).bind("mousemove keypress wheel scroll", function(e) {
+          time = new Date().getTime();
+          console.log(time)
+      });
+    
+    
+      function refresh() {
+          if(new Date().getTime() - time >= 60000) 
+              window.location='/sudpapp/monitoring';
+          else 
+              setTimeout(refresh, 10000);
+      }
+    
+      setTimeout(refresh, 10000);
+    </script>
+    </div>
+    
+{% endblock %}

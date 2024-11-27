@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% block additional_res %}
+	<script src="{{ url_for('static', path='/lib/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/jquery.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            let tooltipList = tooltipTriggerList.map(function(element){
+                return new bootstrap.Tooltip(element);
+            });
+        });
+    </script>
+    <script>
+            // event fires, if the user leaves the page
+        window.addEventListener("beforeunload", () => {
+          // save an item to the users local storage
+          localStorage.setItem(
+            "scrollPosition", // item name/key
+            document.querySelector(".requests_area").scrollTop // item value (scroll top position in this case)
+          );
+        });
+    </script>
+    <script>
+        window.addEventListener("load", () => {
+          // setting scrollTop of container to:
+          document.querySelector(".requests_area").scrollTop =
+            // whatever value the item with name/key scrollPosition in the local storage holds
+            localStorage.getItem("scrollPosition") || 1000; // or if it's not set, simply use 0 as fallback
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="max-h d-flex flex-column p-2">
+        <div class="container-fluid visual-block h-100 mh-100 overflow-hidden">
+            <form method="post">
+                {{ search_form.csrf_token }}
+                <div class="row d-flex align-content-center justify-content-center mt-3">
+                    <div class="col">
+{#                        <input type="text" class="rounded-4 regular-input text-m">#}
+                        {{ search_form.search_field(class="rounded-4 regular-input text-m") }}
+                    </div>
+                    <div class="col-2 d-flex internal-btn">
+{#                        <input class="w-100 rounded-4 regular-btn" type="button" value="ПОИСК">#}
+                        {{ search_form.search_submit(class="w-100 rounded-4 regular-btn") }}
+                    </div>
+                </div>
+            </form>
+
+            <form method="post">
+                <div class="row d-flex align-content-center justify-content-center mt-2 mb-4">
+                {{ filter_form.csrf_token }}
+                    <div class="col">
+{#                        <input type="date" class="rounded-4 text-center regular-input text-m" />#}
+                        {{ filter_form.filter_fdate(class="rounded-4 text-center regular-input text-m") }}
+                    </div>
+                    <div class="col">
+{#                        <input type="date" class="rounded-4 text-center regular-input text-m"/>#}
+                        {{ filter_form.filter_tdate(class="rounded-4 text-center regular-input text-m") }}
+                    </div>
+                    <div class="col internal-btn">
+                        {{ filter_form.apply_button(class="h-100 rounded-4 internal-btn regular-btn") }}
+                    </div>
+                    <div class="col internal-btn">
+{#                        <button class="h-100 rounded-4 internal-btn regular-btn" >CБРОСИТЬ ФИЛЬТР</button>#}
+                        {{ filter_form.reset_button(class="h-100 rounded-4 internal-btn regular-btn") }}
+                    </div>
+                </div>
+            </form>
+            <div class="row d-flex flex-column align-content-center h-85">
+                <div data-simplebar data-simplebar-auto-hide="false" class="requests_area overflow-auto max-h p-3">
+                    <div class="accordion" id="accordionRequests">
+                        {% for r in actual_requests %}
+                            {% with req_id=r['id'],
+                            req_type=r['type'],
+                            req_status=r['status'],
+                            req_comment = r['comment'],
+                            visitors=r['visitor'],
+                            cars=r['car'],
+                            from_date=r['from_date'],
+                            to_date=r['to_date'],
+                            from_time=r['from_time'],
+                            to_time=r['to_time'],
+                            contract=r['contract_name'],
+                            organization=r["organization"],
+                            created_date=r["created_date"],
+                            passmode=r["passmode"].upper(),
+                            files=r["files"],
+                            approval=r["approve"][-1],
+                            creator=r['creator'] %}
+                        	    {% include 'inc/_accordion_request_card.html' %}
+                            {% endwith %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for r in actual_requests %}
+        {% if r['files'] %}
+            <div class="modal fade overflow-hidden" id="filesModal-{{ r['id'] }}" tabindex="-1" aria-labelledby="filesModalLabel-{{ r['id'] }}" aria-hidden="true">
+              <div class="modal-dialog modal-xl  modal-dialog-centered">
+                <div class="modal-content rounded-4 border-black border-3">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5 text-m" id="filesModalLabel-{{ r['id'] }}">ПРОСМОТР ФАЙЛОВ</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                        {% if r['files'] %}
+                    <div id="carouselFiles-{{ r['id'] }}" class="carousel slide">
+                      <div class="carousel-indicators bg-black opacity-50 rounded-1">
+                          {% for file in r['files']['filenames'] %}
+                              {% if loop.first %}
+                                <button type="button" data-bs-target="#carouselFiles-{{ r['id'] }}" data-bs-slide-to="{{ loop.index0 }}" class="active" aria-current="true" aria-label="Slide {{ loop.index }}"></button>
+                              {% else %}
+                                <button type="button" data-bs-target="#carouselFiles-{{ r['id'] }}" data-bs-slide-to="{{ loop.index0 }}" aria-label="Slide {{ loop.index }}"></button>
+                              {% endif %}
+                          {% endfor %}
+                      </div>
+                      <div class="carousel-inner">
+                        {% for file in r['files']['filenames'] %}
+                          {% if loop.first %}
+                            <div class="carousel-item active">
+                                  <object
+                                    data='http://192.168.8.175:9837/sudpapp/files/{{ file }}'
+                                    type="application/pdf"
+                                    class="d-block w-100 rounded-2"
+                                    height="800"
+                                  >
+
+                                    <iframe
+                                      src='http://192.168.8.175:9837/sudpapp/files/{{ file }}'
+                                    class="d-block w-100"
+                                    height="800"
+                                    >
+                                    <p>Браузер не поддерживает просмотр PDF</p>
+                                    </iframe>
+                                  </object>
+                            </div>
+                          {% else %}
+                            <div class="carousel-item">
+                              <object
+                                data=http://192.168.8.175:9837/sudpapp/files/{{ file }}
+                                type="application/pdf"
+                                class="d-block w-100 rounded-2"
+                                height="800"
+                              >
+
+                                  <iframe
+                                      src=http://192.168.8.175:9837/sudpapp/files/{{ file }}
+                                      class="d-block w-100"
+                                    height="800"
+                                  >
+                                    <p>Браузер не поддерживает просмотр PDF</p>
+                                </iframe>
+                              </object>
+                            </div>
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% else %}
+                      НЕТ ПРИЛОЖЕННЫХ ФАЙЛОВ
+                  {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+

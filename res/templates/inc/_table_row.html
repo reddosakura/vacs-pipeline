@@ -1,0 +1,27 @@
+<tr class="table-row">
+    <td class="сell-text request-id">{{ req_id }}</td>
+    <td class="сell-text cell-lnp fitwidth text-justify">
+        {% for visitor in visitors %}
+            {{ visitor['lastname'] }} {{ visitor['name'] }} {{ visitor['patronymic'] }}<br>
+        {% endfor %}
+    </td>
+    <td class="сell-text cell-cars fitwidth text-justify">
+        {% for car in cars %}
+            {{ car['govern_num'] }} {{ car['carmodel'] }}<br>
+        {% endfor %}
+    </td>
+    {% if req_comment.split('\n')[-1] %}
+    
+    <td class="сell-text fitwidth req-comment admin-bg  text-wrap text-justify">{{ req_comment }}</td>
+    {% else %}
+    <td class="сell-text fitwidth req-comment text-wrap">{{ req_comment }}</td>
+    {% endif %}
+    <td class="сell-text fitwidth">{{ req_type.upper() }}</td>
+    <!-- <td class="fitwidth">{{ req_status }}</td> -->
+    <td class="сell-text fitwidth">{{ from_date }}</td>
+    <td class="сell-text fitwidth">{{ to_date }}</td>
+    <td class="сell-text fitwidth">С {{ from_time }} ДО {{ to_time }}</td>
+    <td class="сell-text cell-contract fitwidth">{{ contract }}</td>
+    <td class="сell-text cell-organisation fitwidth">{{ organization }}</td>
+    <td class="сell-text creator fitwidth">{{ creator }}</td>
+</tr>

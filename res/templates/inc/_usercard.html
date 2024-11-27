@@ -1,0 +1,48 @@
+
+{% if role =="1" %}
+    {% set role = "ЗАЯВИТЕЛЬ" %}
+    {% set color = "requester requester-bg" %}
+{% elif role == "2" %}
+    {% set role = "ОГРАНИЧЕННОЕ АДМИНИСТРИРОВАНИЕ" %}
+    {% set color = "limadmin limadmin-bg" %}
+{% elif role == "3" %}
+    {% set role = "АДМИНИСТРАТОР" %}
+    {% set color = "admin admin-bg" %}
+{% elif role == "4" %}
+    {% set role = "СУПЕРПОЛЬЗОВАТЕЛЬ" %}
+    {% set color = "superuser superuser-bg" %}
+{% elif role == "0" %}
+    {% set role = "ОХРАНА" %}
+    {% set color = "monitoring monitoring-bg" %}
+{% endif %}
+<div class="d-flex {{ color }} user-card justify-content-around border border-3 border-black rounded-4 col-5 pb-3 pt-3" style="height: 10vmax">
+    <div class="col-1 align-content-end">
+        <svg class="{{ color }} w-75 align-self-center" viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="21.5" cy="21.5" r="20.5" stroke="black" stroke-width="2"/>
+            <circle cx="21" cy="14" r="7" fill="black"/>
+            <path d="M18.6806 22.9722C20.1643 22.3503 21.8357 22.3503 23.3194 22.9722L27.5259 24.7354C30.6345 26.0384 31.9116 29.7608 30.2575 32.6978V32.6978C29.259 34.4707 27.3823 35.5676 25.3475 35.5676H16.6525C14.6177 35.5676 12.741 34.4707 11.7425 32.6978V32.6978C10.0884 29.7608 11.3655 26.0384 14.4741 24.7354L18.6806 22.9722Z" fill="black"/>
+        </svg>
+    </div>
+
+    <div class="col-10 d-flex flex-column">
+        <div class="row">
+            <p class="lnp fs-3">{{ lastname.upper() }} {{ name.upper() }} {{ patronymic.upper() if patronymic else '' }}</p>
+        </div>
+        <div class="row flex-grow-1">
+            <div class="col d-flex flex-column align-content-start fs-5 w-50">
+                <div class="d-block">
+                    <p class="spec text-truncate">{{ speciality }}</p>
+                </div>
+                <div class="mt-auto fs-5">
+                    {{ role }}
+                </div>
+            </div>
+
+            <div class="col d-flex flex-column align-items-end w-50">
+                <button type="button" class="mt-auto border border-3 border-black p-1 rounded-3 {{ color }}" onclick="window.location = '/sudpapp/user/edit/{{ _id }}'">РЕДАКТИРОВАТЬ</button>
+            </div>
+        </div>
+    </div>
+
+
+</div>

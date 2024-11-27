@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block additional_res %}
+	<script src="{{ url_for('static', path='/js/collapse.js') }}"></script>
+	<script src="{{ url_for('static', path='/js/set_switch_trigger.js') }}"></script>
+    <script src="{{ url_for('static', path='/lib/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function(){
+        let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        let tooltipList = tooltipTriggerList.map(function(element){
+            return new bootstrap.Tooltip(element);
+        });
+    });
+</script>
+{#    <script src="{{ url_for('static', path='/lib/pdf-js/build/pdf.mjs') }}"></script>#}
+{% endblock %}
+{% block content %}
+
+    <div class="max-h d-flex">
+        <div class="d-flex flex-fill flex-column gap-3 p-3 justify-content-center visual-block m-2">
+
+            <form method="post" class="align-content-center justify-content-center">
+                {{ search_form.csrf_token }}
+                <div class="d-flex gap-2">
+                    <div class="col">
+                        {{ search_form.search_field(class="rounded-4 regular-input text-m") }}
+                    </div>
+                    <div class="col-2 internal-btn">
+                        {{ search_form.search_submit(class="w-100 rounded-4 regular-btn") }}
+                    </div>
+                </div>
+            </form>
+
+            <form method="post" class="align-content-center justify-content-center">
+                {{ filter_form.csrf_token }}
+                <div class="d-flex gap-2">
+                    <div class="col">
+    {#                        <input type="date" class="rounded-4 text-center regular-input text-m" />#}
+                        {{ filter_form.filter_fdate(class="rounded-4 text-center regular-input text-m") }}
+                    </div>
+                    <div class="col">
+    {#                        <input type="date" class="rounded-4 text-center regular-input text-m"/>#}
+                        {{ filter_form.filter_tdate(class="rounded-4 text-center regular-input text-m") }}
+                    </div>
+                    <div class="col internal-btn">
+                        {{ filter_form.apply_button(class="h-100 rounded-4 internal-btn regular-btn") }}
+                    </div>
+                    <div class="col internal-btn">
+    {#                        <button class="h-100 rounded-4 internal-btn regular-btn" >CБРОСИТЬ ФИЛЬТР</button>#}
+                        {{ filter_form.reset_button(class="h-100 rounded-4 internal-btn regular-btn") }}
+                    </div>
+                </div>
+            </form>
+
+            <div class="d-flex gap-3 flex-fill mh-80 justify-content-center">
+
+                <div class="d-flex col-1 flex-column visual-block flex-fill">
+                    <div class="mt-2 align-items-center">
+                        <p class="text-i w-100 text-center">
+                            ПОСЕТИТЕЛИ
+                        </p>
+                    </div>
+                    <div data-simplebar class="max-h overflow-auto">
+                        <div class="p-3">
+                            {% for v in v_passages %}
+                                {% if v %}
+                                    {% with visitor=v %}
+                                        {% include 'inc/_visitor_passage_card.html' %}
+                                    {% endwith %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex col-1 gap-2 flex-column visual-block flex-fill">
+                    <div class="mt-2 align-items-center">
+                        <p class="text-i w-100 text-center">
+                            АВТОМОБИЛИ
+                        </p>
+                    </div>
+                    <div data-simplebar class="max-h overflow-auto">
+                        <div class="p-3">
+                            {% for c in c_passages %}
+                                {% if c %}
+                                    {% with car=c %}
+                                        {% include 'inc/_car_passage_card.html' %}
+                                    {% endwith %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex col-1 gap-2 flex-column visual-block flex-fill">
+                    <div class="mt-2 align-items-center">
+                        <p class="text-i w-100 text-center">
+                            СПЕЦТРАНСПОРТ
+                        </p>
+                    </div>
+                    <div data-simplebar class="max-h overflow-auto">
+                        <div class="p-3">
+                            {% for s in s_passages %}
+                                {% if s %}
+                                    {% with spec=s %}
+                                        {% include 'inc/_spec_passage_card.html' %}
+                                    {% endwith %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+
+    </div>
+
+
+{% endblock %}

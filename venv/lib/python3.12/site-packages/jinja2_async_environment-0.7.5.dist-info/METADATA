@@ -1,0 +1,32 @@
+Metadata-Version: 2.1
+Name: jinja2-async-environment
+Version: 0.7.5
+Author-Email: lesleslie <les@wedgwoodwebworks.com>
+License: BSD-3-Clause
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Operating System :: OS Independent
+Classifier: Framework :: FastAPI
+Classifier: Framework :: AsyncIO
+Classifier: Typing :: Typed
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Development Status :: 4 - Beta
+Requires-Python: >=3.12
+Requires-Dist: jinja2>=3.1.4
+Requires-Dist: redis>=5.0.4
+Description-Content-Type: text/markdown
+
+# jinja2-async-environment
+
+[![Code style: crackerjack](https://img.shields.io/badge/code%20style-crackerjack-000042)](https://github.com/lesleslie/crackerjack)
+
+### Asynchronous Jinja2 environment and loaders
+
+## About
+
+## Usage
+
+## License
+
+BSD-3-Clause

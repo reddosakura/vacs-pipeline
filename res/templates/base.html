@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=4, initial-scale=1.0">
+    <title>{% block title %}Система управления доступом посетителей{% endblock %}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', path='/res/favicon.ico') }}">
+    {% block main_res %}
+        <link href="{{ url_for('static', path='/lib/bootstrap-5.3.3-dist/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/lib/simple-bar/package/dist/simplebar.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/lib/blobz.min.css') }}" rel="stylesheet">
+        <script src="{{ url_for('static',path='/lib/simple-bar/package/dist/simplebar.js') }}"></script>
+        <script src="{{ url_for('static',path='/js/collapse.js') }}"></script>
+
+        <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet">
+        <script src="{{ url_for('static', path='/js/jquery.js') }}"></script>
+{#        <script type="module" src="{{ url_for('static', path='/js/blob-morphing.js') }}"></script>#}
+    {% endblock %}
+    {% block additional_res %}{% endblock %}
+
+
+
+</head>
+<body class="overflow-hidden">
+    {% block loader %}
+        <div id="loading">
+            <div class="d-flex flex-column anime gap-3">
+               <span class="loader align-self-center"></span>
+               <p class="fs-1 align-self-center">ЗАГРУЗКА</p>
+            </div>
+        </div>
+    {% endblock %}
+    {% block header %}
+        {% include 'inc/_header.html' %}
+    {% endblock %}
+    <div class="modal fade overflow-hidden" id="userProfileModal" tabindex="-1" aria-labelledby="userProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content rounded-4 border-black border-3">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5 text-m" id=userProfileModalLabel">ПРОФИЛЬ</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column justify-content-center fs-4 gap-3">
+                <div class="d-flex">
+                    <p class="col text-center">ПОЛЬЗОВАТЕЛЬ:<br>{{ user.upper() }}</p>
+                    {% if role == "superuser" %}
+                        <p class="col text-center">УРОВЕНЬ ДОСТУПА: <span class="superuser-bg p-2 rounded-2">СУПЕРПОЛЬЗОВАТЕЛЬ</span></p>
+                    {% elif role == "admin" %}
+                        <p class="col text-center">УРОВЕНЬ ДОСТУПА: <span class="admin-bg p-2 rounded-2">АДМИНИСТРАТОР</span></p>
+                    {% elif role == "limited_admin" %}
+                        <p class="col text-center">УРОВЕНЬ ДОСТУПА: <br><span class="limadmin-bg p-2 rounded-2">ОГРАНИЧЕННОЕ АДМИНИСТРИРОВАНИЕ</span></p>
+                    {% elif role == "requester" %}
+                        <p class="col text-center">УРОВЕНЬ ДОСТУПА: <span class="requester-bg p-2 rounded-2">ЗАЯВИТЕЛЬ</span></p>
+                    {% elif role == "monitoring" %}
+                        <p class="col text-center">УРОВЕНЬ ДОСТУПА: <span class="monitoring-bg p-2 rounded-2">МОНИТОРИНГ</span></p>
+                    {% endif %}
+                </div>
+                <div class="internal-btn">
+                    <input class="rounded-4 btn w-100" type="button" onclick="window.location='/sudpapp/auth';" value="ВЫЙТИ">
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    {% block content %}{% endblock %}
+</body>
+{% block loader_script %}
+    <script>
+      $(window).on('load', function () {
+        $('#loading').hide();
+      })
+    </script>
+{% endblock %}
+        <script src="{{ url_for('static', path='/js/set_active.js') }}"></script>
+</html>
+

@@ -1,0 +1,56 @@
+  {% if files %}
+    <div id="carouselFiles" class="carousel slide">
+      <div class="carousel-indicators bg-black opacity-50 rounded-1">
+          {% for file in files %}
+              {% if loop.first %}
+                <button type="button" data-bs-target="#carouselFiles" data-bs-slide-to="{{ loop.index0 }}" class="active" aria-current="true" aria-label="Slide {{ loop.index }}"></button>
+              {% else %}
+                <button type="button" data-bs-target="#carouselFiles" data-bs-slide-to="{{ loop.index0 }}" aria-label="Slide {{ loop.index }}"></button>
+              {% endif %}
+          {% endfor %}
+      </div>
+      <div class="carousel-inner">
+        {% for file in files %}
+          {% if loop.first %}
+            <div class="carousel-item active">
+                  <object
+                    data='host.docker.internal:9837/sudpapp/files/{{ file }}'
+                    type="application/pdf"
+                    class="d-block w-100 rounded-2"
+                    height="800"
+                  >
+
+                    <iframe
+                      src='host.docker.internal:9837/sudpapp/files/{{ file }}'
+                    class="d-block w-100"
+                    height="800"
+                    >
+                    <p>Браузер не поддерживает просмотр PDF</p>
+                    </iframe>
+                  </object>
+            </div>
+          {% else %}
+            <div class="carousel-item">
+              <object
+                data=host.docker.internal:9837/sudpapp/files/{{ file }}
+                type="application/pdf"
+                class="d-block w-100 rounded-2"
+                height="800"
+              >
+
+                  <iframe
+                      src=host.docker.internal:9837/sudpapp/files/{{ file }}
+                      class="d-block w-100"
+                    height="800"
+                  >
+                    <p>Браузер не поддерживает просмотр PDF</p>
+                </iframe>
+              </object>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+      НЕТ ПРИЛОЖЕННЫХ ФАЙЛОВ
+  {% endif %}

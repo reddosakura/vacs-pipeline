@@ -1,0 +1,300 @@
+{#<form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">#}
+{#    {{ form.csrf_token }}#}
+{#    <div class="row w-100 p-0 m-0 h-100 visual-block">#}
+{#        <div class="col container mt-4 mh-100 row-gap-4">#}
+{#              <div class="row mb-4 m-0 p-0">#}
+{#                <div class="col m-0 p-0">#}
+{##}
+{#                    <div class="form-floating">#}
+{##}
+{#                        {{ form.organization(class="form-control fs-4 regular-input", id="orgFloat", placeholder="Организация") }}#}
+{#                        <label for="orgFloat">ОРГАНИЗАЦИЯ</label>#}
+{#                    </div>#}
+{#                </div>#}
+{#              </div>#}
+{#              <div class="row container-fluid p-0 mt-3 m-0">#}
+{#                <div class="row mh-50 w-100 p-0 m-0 column-gap-2">#}
+{#                    <div class="col p-0 m-0 d-flex flex-column">#}
+{#                        <div class="text-s w-100 align-content-center text-center">#}
+{#                            <p>КОММЕНТАРИЙ</p>#}
+{#                        </div>#}
+{#                        {{ form.comment(class="text-field fs-4 w-100 h-100") }}#}
+{#                    </div>#}
+{#                    <div class="col p-0 m-0">#}
+{#                        <div class="">#}
+{#                            <div class="text-s w-100 align-content-center text-center">#}
+{#                                <p>ТИП ЗАЯВКИ</p>#}
+{#                            </div>#}
+{#                            {{ form.type(class="form-select text-center fw-bold input-bg regular-input text-m min-h-9") }}#}
+{#                        </div>#}
+{##}
+{#                        <div class="mb-2">#}
+{#                            <div class="text-s w-100 align-content-center text-center">#}
+{#                                <p>ВРЕМЕННОЙ ИНТЕРВАЛ</p>#}
+{#                            </div>#}
+{#                            {{ form.time_interval(class="form-select text-center fw-bold input-bg regular-input text-m min-h-9") }}#}
+{#                        </div>#}
+{#                        <div class="text-s w-100 align-content-center text-center">#}
+{#                            <p>ПРОПУСК ОСУЩЕСТВЛЯТЬ</p>#}
+{#                        </div>#}
+{#                            {{ form.passage_mode(class="form-select text-center fw-bold input-bg regular-input text-m min-h-9") }}#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="row d-flex w-100 p-0 m-0 column-gap-2 pb-4">#}
+{#                    <div class="col mw-50 container h-100 p-0 m-0">#}
+{#                        <div class="row m-1 p-0">#}
+{#                            <div class="col m-0 p-0">#}
+{#                                <div class="text-s w-100 align-content-center text-center">#}
+{#                                    <p>С ДАТЫ</p>#}
+{#                                </div>#}
+{#                                {{ form.from_date(class="date-input regular-input text-center text-m") }}#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div class="row m-1">#}
+{#                            <div class="col m-0 p-0">#}
+{#                                <div class="form-floating centrize">#}
+{#                                    {{ form.contract_name(class="form-control fs-4 regular-input", id="floatingInput", placeholder="Договор") }}#}
+{#                                    <label for="floatingInput">ДОГОВОР</label>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div class="row h-50 m-1 p-0">#}
+{#                            <div class="col m-0 p-0">#}
+{#                                <div class="internal-btn">#}
+{#                                    {{ form.create_btn(class="rounded-4 w-100 regular-btn") }}#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col mw-50 container p-0 m-0">#}
+{#                        <div class="row p-0 m-1">#}
+{#                            <div class="col text-s w-100 align-content-center text-center">#}
+{#                                <p>ПО ДАТУ</p>#}
+{#                            </div>#}
+{#                            {{ form.to_date(class="date-input regular-input text-center text-m") }}#}
+{#                        </div>#}
+{#                        <div class="row m-0 p-0">#}
+{#                            <div class="col container m-0 p-2 visual-block" style="max-height: 15vmax">#}
+{#                                <div class="row p-0 m-0 mh-75 overflow-auto" >#}
+{#                                    <div id="files-block" class="col p-2">#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                                <div class="row p-0 m-0 mh-15">#}
+{#                                    <div class="col p-2">#}
+{#                                        <div class="h-100">#}
+{#                                            <label class="input-file d-flex align-content-center text-center">#}
+{#                                                {{ form.add_files_btn(class="fs-6 regular-btn") }}#}
+{#                                                 <span class="input-file-btn">ПЕРЕЗАПИСАТЬ ФАЙЛЫ</span>#}
+{#                                          </label>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#              </div>#}
+{#        </div>#}
+{##}
+{#        <div class="col w-50 mh-70 m-3 mb-4 p-0 visual-block">#}
+{#            <div class="container-fluid h-100">#}
+{#                <div class="row">#}
+{#                    <div class="col text-m text-center mt-2" >#}
+{#                        ПОСЕТИТЕЛИ#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="row" >#}
+{#                    <div class="col">#}
+{#                        <div class="container">#}
+{#                            <div class="row d-flex h-10">#}
+{#                                <div class="col container text-label rounded-4 m-0">#}
+{#                                    <div class="row p-1">#}
+{#                                        <div class="col p-1">#}
+{#                                            <div class="h-100 internal-btn">#}
+{#                                                <input class="add-visitor-subform rounded-4 fs-5 w-100 h-100 regular-btn" type="button" value="+ ДОБАВИТЬ ПОСЕТИТЕЛЯ">#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="row mt-2 mh-25" >#}
+{#                                <div class="col p-0 mh-25 h-50">#}
+{#                                    <div class="container mh-25 p-0 m-0">#}
+{#                                        <div class="row mh-75 p-0 m-0 visual-block overflow-auto">#}
+{#                                            <div id="visitors_list_container" class="col p-2 m-0 mh-25vmin">#}
+{#                                                {% for v in form.visitor.entries %}#}
+{#                                                    {% with lastname=v.lastname(class="form-control fs-5 regular-input"),#}
+{#                                                    name=v.form.name(class="form-control fs-5 regular-input"),#}
+{#                                                    patronymic=v.patronymic(class="form-control fs-5 regular-input"),#}
+{#                                                    v_id = v.v_id(class="visually-hidden") %}#}
+{#                                                        {% include 'inc/_visitor_creation_item.html' %}#}
+{#                                                    {% endwith %}#}
+{#                                                {% endfor %}#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="row">#}
+{#                    <div class="col text-m text-center mt-2" >#}
+{#                        АВТОМОБИЛИ#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="row mh-40" >#}
+{#                    <div class="col">#}
+{#                        <div class="container">#}
+{#                            <div class="row d-flex h-10">#}
+{#                                <div class="col container text-label rounded-4 m-0">#}
+{#                                    <div class="row p-1">#}
+{#                                        <div class="col p-1">#}
+{#                                            <div class="h-100 internal-btn">#}
+{#                                                <input class="add-car-subform rounded-4 fs-5 w-100 h-100 regular-btn" type="button" value="+ ДОБАВИТЬ АВТОМОБИЛЬ">#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="row mt-2 mb-2 mh-25" >#}
+{#                                <div id="cars_list_container" class="col p-0 mh-25 h-50 p-2 mh-25vmin visual-block overflow-auto">#}
+{##}
+{#                                    {% for c in form.car.entries %}#}
+{#                                        {% with carmodel=c.carmodel(class="form-control fs-5 regular-input"),#}
+{#                                        govern_num=c.govern_num(class="form-control fs-5 regular-input"), c_id = c.c_id(class="visually-hidden") %}#}
+{#                                            {% include 'inc/_car_creation_item.html' %}#}
+{#                                        {% endwith %}#}
+{#                                    {% endfor %}#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</form>#}
+
+
+<form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()" class="flex-fill p-2">
+    {{ form.csrf_token }}
+    <div class="d-flex flex-column p-2 gap-2 m-0 visual-block anime w-100 h-100">
+
+        <div class="d-flex flex-fill">
+
+{#              ПЕРВЫЙ БЛОК#}
+            <div class="w-50 p-0">
+                <div class="container p-0 h-100">
+                    <div class="row">
+                        <div class="fs-5 text-center" >
+                            Посетители
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col d-flex flex-column gap-2">
+                            <div class="internal-btn">
+                                <input class="add-visitor-subform rounded-4 fs-6 w-100 h-100 regular-btn" type="button" value="+ ДОБАВИТЬ ПОСЕТИТЕЛЯ">
+                            </div>
+
+                            <div id="visitors_list_container" class="col p-0 p-2 mh-25vmin visual-block overflow-auto">
+                                {% for v in form.visitor.entries %}
+                                    {% with lastname=v.lastname(class="form-control fs-5 regular-input", required="true"), name=v.form.name(class="form-control fs-5 regular-input"), patronymic=v.patronymic(class="form-control fs-5 regular-input") %}
+                                        {% include 'inc/_visitor_creation_item.html' %}
+                                    {% endwith %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="fs-5 text-center" >
+                            Автомобили
+                        </div>
+                    </div>
+                    <div class="row" >
+                        <div class="col d-flex flex-column gap-2">
+                            <div class="internal-btn">
+                                <input class="add-car-subform rounded-4 fs-6 w-100 h-100 regular-btn" type="button" value="+ ДОБАВИТЬ АВТОМОБИЛЬ">
+                            </div>
+                            <div id="cars_list_container" class="col p-0 p-2 visual-block mh-25vmin overflow-auto">
+                                {% for c in form.car.entries %}
+                                    {% with carmodel=c.carmodel(class="form-control fs-5 regular-input"), govern_num=c.govern_num(class="form-control fs-5 regular-input govern_num") %}
+                                        {% include 'inc/_car_creation_item.html' %}
+                                    {% endwith %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+{#             ВТОРОЙ БЛОК#}
+            <div class="w-50 container">
+              <div class="row mb-4 gap-2 m-0 p-0">
+                <div class="col m-0 p-0">
+                    <label for="orgFloat">Организация</label>
+                    {{ form.organization(class="form-control fs-4 regular-input", id="orgFloat") }}
+                </div>
+                <div class="col m-0 p-0">
+                    <label for="contract">Договор</label>
+                    {{ form.contract_name(class="form-control fs-4 regular-input", id="contract") }}
+                </div>
+              </div>
+
+              <div class="row container p-0 mt-3 m-0">
+                <div class="row mh-50 w-100 p-0 m-0 column-gap-2">
+                    <div class="col p-0 m-0 d-flex flex-column">
+                        <label for="commentfield">Комментарий</label>
+                        {{ form.comment(class="text-field fs-4 w-100 h-100", id="commentfield") }}
+                    </div>
+                    <div class="col p-0 m-0">
+                        <label for="requesttype">Тип заявки</label>
+                        {{ form.type(class="form-select text-center fw-bold input-bg regular-input text-m min-h-9", id="requesttype") }}
+                        <label for="timeinterval">Временной интервал</label>
+                        {{ form.time_interval(class="form-select text-center fw-bold input-bg regular-input text-m min-h-9", id="timeinterval") }}
+                        <label for="passagemode">Пропуск осуществлять</label>
+                        {{ form.passage_mode(class="form-select text-center fw-bold input-bg text-uppercase regular-input text-m min-h-9", id="passagemode") }}
+                        <div class="d-flex gap-1">
+
+                            <div class="m-0 p-0">
+                                <label for="fromdate">С даты</label>
+                                {{ form.from_date(class="date-input regular-input text-center text-m", id="fromdate") }}
+                            </div>
+                            <div class="p-0 m-0">
+                                <label for="todate">По дату</label>
+                                {{ form.to_date(class="date-input regular-input text-center text-m", id="todate") }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-flex w-100 p-0 m-0 column-gap-2 mt-2">
+                    <div class="col mw-50 container p-0 m-0">
+                        <div>
+                            Сопроводительные файлы
+                        </div>
+                        <div class="m-0 p-0 visual-block">
+                            <div class="row p-0 m-0 overflow-auto" style="max-height: 15vmin">
+                                <div id="files-block" class="col">
+                                </div>
+                            </div>
+                            <div class="row p-0 m-0 mh-15">
+                                <div class="p-2">
+                                    <label class="input-file d-flex align-content-center text-center">
+                                        {{ form.add_files_btn(class="fs-6 regular-btn") }}
+                                         <span class="input-file-btn">ПЕРЕЗАПИСАТЬ ФАЙЛЫ</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mw-50 container align-content-center h-100 p-0 m-0">
+                        <div class="internal-btn m-1 p-0">
+                            {{ form.create_btn(class="rounded-4 w-100 regular-btn") }}
+                        </div>
+                    </div>
+                </div>
+              </div>
+        </div>
+        </div>
+    </div>
+</form>

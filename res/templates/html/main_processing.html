@@ -1,0 +1,319 @@
+{% extends 'base.html' %}
+{% block additional_res %}
+	<script src="{{ url_for('static', path='/js/collapse.js') }}"></script>
+	<script src="{{ url_for('static', path='/js/set_switch_trigger.js') }}"></script>
+    <script src="{{ url_for('static', path='/lib/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function(){
+        let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        let tooltipList = tooltipTriggerList.map(function(element){
+            return new bootstrap.Tooltip(element);
+        });
+    });
+</script>
+{% endblock %}
+{% block content %}
+    <div class="w-100 h-100">
+            <div class="d-inline-flex w-100 max-h">
+            <!-- Блок списка карточек с  -->
+                <div class="col-3 m-2 visual-block">
+                    <div class="container-fluid h-100">
+                        <div class="row position-sticky m-2 d-flex justify-content-center">
+                            <div class="col">
+                                <div class="form-switch chip d-flex justify-content-center">
+
+                                    <div class="centrize">
+{#                                        {{ form.csrf_token }}#}
+                                    <div class="d-flex align-items-center">
+                                        {% if checked_state %}
+                                                <input onclick="switchCheck()" class="m-1 form-check-input" type="checkbox" role="switch" id="switch_check" name="switch_check" checked>
+                                        {% else %}
+                                                <input onclick="switchCheck()" class="m-1 form-check-input" type="checkbox" role="switch" id="switch_check" name="switch_check">
+
+                                        {% endif %}
+                                        <label for="switch_check" class="text-i anime" >{{ mode }}</label>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container h-95 overflow-auto ">
+                            <div class="row h-100">
+                                <div data-simplebar data-simplebar-auto-hide="false" class="overflow-auto mh-90">
+                                    <div class="col h-95 p-1">
+                                    {% if min_cards %}
+                                        {% for min_card in min_cards %}
+                                            {% with req_id=min_card['id'], creator=min_card['creator'].upper(), sudp_req_id=sudp_request['id'] %}
+                                                {% if mode == 'СОГЛАСОВАНИЕ' %}
+                                                    <a href="/sudpapp/proc/approve/{{ min_card['id'] }}">
+                                                        {% with color="approve" %}
+                                                            {% include 'inc/_small_request_item.html' %}
+                                                        {% endwith %}
+                                                    </a>
+                                                {% else %}
+                                                    <a href="/sudpapp/proc/consider/{{ min_card['id'] }}">
+                                                        {% with color="consider" %}
+                                                            {% include 'inc/_small_request_item.html' %}
+                                                        {% endwith %}
+                                                    </a>
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col container-fluid m-2">
+                {% if min_cards %}
+                    <!-- Первый блок -->
+
+                    <div class="row h-5">
+                        <p class="text-h">ЗАЯВКА №{{ sudp_request['id'] }}</p>
+                    </div>
+                    <div class="row h-95 d-flex">
+                        <div class="col w-70 h-100 container">
+                            <div class="row max-h">
+                                <div class="col mw-50 h-100">
+                                    <div class="text-s m-1">Заявитель</div>
+                                    <div class="text-m m-1 text-label text-center">{{ sudp_request['creator'].upper() }}</div>
+                                    <div class="text-s m-1">Тип заявки</div>
+                                    <div class="text-m m-1 text-label text-center">{{ sudp_request['type'].upper() }}</div>
+                                    <div class="text-s m-1">Договор</div>
+                                    <div class="text-m m-1  text-truncate text-label text-center">
+                                        <a data-bs-toggle="tooltip"
+                                           data-bs-placement="left"
+                                           title="{{ "БЕЗ ДОГОВОРА" if not sudp_request['contract_name'].upper() else sudp_request['contract_name'].upper() }}">
+                                            {{ "БЕЗ ДОГОВОРА" if not sudp_request['contract_name'].upper() else sudp_request['contract_name'].upper() }}
+                                        </a>
+                                    </div>
+                                    <div class="text-s m-1">Организация</div>
+                                    <div class="text-m m-1 text-truncate text-label text-center">
+                                        <a data-bs-toggle="tooltip"
+                                           data-bs-placement="left"
+                                           title="{{ "БЕЗ ОРГАНИЗАЦИИ" if not sudp_request['organization'].upper() else sudp_request['organization'].upper() }}">
+                                            {{ "БЕЗ ОРГАНИЗАЦИИ" if not sudp_request['organization'].upper() else sudp_request['organization'].upper()}}
+                                        </a>
+
+                                    </div>
+                                    <div class="visual-block mt-3 h-50">
+                                        <div class="container-fluid h-100">
+                                            <div class="row d-flex text-m align-content-center text-center h-15">
+                                                <p class="col">Посетители</p>
+                                            </div>
+                                            <div class="row h-85 p-1">
+                                                <div data-simplebar data-simplebar-auto-hide="false" class="overflow-auto mh-90 p-3">
+                                                    <div class="col">
+                                                    {% if sudp_request['visitor'] %}
+                                                        {% for visitor in sudp_request['visitor'] %}
+                                                            {% with lastname=visitor['lastname'].upper(), name=visitor['name'].upper(), patronymic=visitor['patronymic'] %}
+                                                                {% if not visitor["is_deleted"] %}
+                                                                    {% include 'inc/_small_visitor_card.html' %}
+                                                                {% endif %}
+                                                            {% endwith %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <p class="w-100 text-center text-m text-truncate">НЕТ ПРИКРЕПЛЕННЫХ<br>ПОСЕТИТЕЛЕЙ</p>
+                                                    {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Второй блок -->
+                                <div class="col mw-50 h-100">
+                                    <p class="text-s m-1">Срок действия заявки</p>
+                                    <p class="text-m m-1 text-label text-center">С {{ sudp_request['from_date'] }} ПО {{ sudp_request['to_date'] }}</p>
+                                    <p class="text-s m-1">Время дейсвтия заявки</p>
+                                    <p class="text-m m-1 text-label text-center">С {{ sudp_request['from_time'] }} ДО {{ sudp_request['to_time'] }}</p>
+                                    <p class="text-s m-1">Пропуск осуществлять</p>
+                                    <p class="text-m m-1 text-label text-center">{{ sudp_request['passmode'].upper() }}</p>
+                                    <p class="text-s m-1">Дата и время создания</p>
+                                    <p class="text-m m-1 text-label text-center">{{ sudp_request['created_date'] }}</p>
+                                    <div class="visual-block mt-3 h-50">
+                                        <div class="container-fluid h-100">
+                                            <div class="row d-flex text-m align-content-center text-center h-15">
+                                                <p class="col">Автомобили</p>
+                                            </div>
+                                            <div class="row h-85 p-1">
+                                                <div data-simplebar data-simplebar-auto-hide="false" class="overflow-auto mh-90 p-3">
+                                                    <div class="col">
+                                                    {% if sudp_request['car'] %}
+                                                        {% for car in sudp_request['car'] %}
+                                                            {% with carmodel=car['carmodel'], govern_num=car['govern_num'].upper() %}
+                                                                {% if not car["is_deleted"] %}
+                                                                    {% include 'inc/_small_car_card.html' %}
+                                                                {% endif %}
+                                                            {% endwith %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <p class="w-100 text-center text-m text-truncate">НЕТ ПРИКРЕПЛЕННЫХ<br>АВТОМОБИЛЕЙ</p>
+                                                    {% endif %}
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col d-flex align-content-center justify-content-center internal-btn">
+                                        {% if not sudp_request['files'] %}
+                                            <div class="text-label text-center align-content-center text-m">
+                                                НЕТ ПРИЛОЖЕННЫХ ФАЙЛОВ
+                                            </div>
+                                        {% else %}
+                                            <input class="rounded-4" type="button" value="ПОСМОТРЕТЬ ФАЙЛЫ" data-bs-toggle="modal" data-bs-target="#filesModal">
+                                        {% endif %}
+                                    </div>
+                            </div>
+                        </div>
+                        <!-- Третий блок -->
+                        <div class="col mh-100 mw-30">
+                            <p class="text-s m-1">Статус согласования</p>
+                           <p data-simplebar data-simplebar-auto-hide="false" class="text-field overflow-auto h-25">
+                                {% if sudp_request['approve'] %}
+                                    {% if sudp_request['approve'][-1]['approval_status'] == 'СОГЛАСУЮ' %}
+                                        <span class="text-label p-1 passappr-bg">{{ "СОГЛАСУЮ" }}</span><br>
+                                    {% else %}
+                                        <span class="text-label p-1 unappr-bg">{{ "НЕ СОГЛАСУЮ" }}</span><br>
+                                    {% endif %}
+                                    {% if sudp_request['approve'][-1]['approval_comments'] %}
+                                        <br><span class="text-label p-1 text-label">КОММЕНТАРИЙ</span><br>
+                                        {{ sudp_request['approve'][-1]['approval_comments'] }}<br><br>
+                                    {% else %}
+                                        <br><span class="text-label p-1 text-label">{{ "БЕЗ КОММЕНТАРИЯ" }}</span><br>
+                                    {% endif %}{{ sudp_request['approve'][-1]['lastname'] }} {{ sudp_request['approve'][-1]['name'] }} {{ sudp_request['approve'][-1]['patronymic'] if sudp_request['approve'][-1]['patronymic']}}
+                                    <br><span class="text-label p-1 text-label">Дата согласования:</span><br>
+                                    {{ sudp_request['approve'][-1]['created_date'] }}
+                                {% else %}
+                                    {% if sudp_request['type'].upper() == 'ОДНОРАЗОВАЯ' %}
+                                    	 <span class="text-label p-1 cons-bg">{{ "РАССМОТРЕНИЕ" }}</span><br>
+                                    {% else %}
+                                    	 <span class="text-label p-1 appr-bg">{{ "НА СОГЛАСОВАНИИ" }}</span><br>
+                                    {% endif %}
+
+                                {% endif %} </p>
+                            <p class="text-s m-1">Комментарий заявителя</p>
+                            <p data-simplebar data-simplebar-auto-hide="false" class="text-field overflow-auto h-25">
+                                {{ sudp_request["comment"].upper() }}
+                            </p>
+                            <div class="mt-2 h-50">
+                                <div class="form-check check-box">
+                                    <div class="d-flex">
+                                        <input id="checkbox" class="form-check-input checkbox" type="checkbox" value="" onclick="commentCollapse()">
+                                        <label class="text-m ms-3 align-content-center form-check-label" for="checkbox">
+                                          Написать комментарий
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <form method="post">
+                                        {{ form.csrf_token }}
+                                        {{ form.comment(class="collapse-area display-none text-field overflow-auto min-h-20 w-100") }}
+
+                                        <div class="d-flex justify-content-center internal-btn flex-wrap p-">
+                                            
+                                            {% if 'admin' not in scopes and mode == "СОГЛАСОВАНИЕ" %}
+                                                {{ form.allow(class="rounded-4 m-1 approve", value="СОГЛАСУЮ") }}
+                                                {{ form.deny(class="rounded-4 m-1 disapprove") }}
+                                            {% elif 'admin' not in scopes and mode == "РАССМОТРЕНИЕ" %}
+                                                {{ form.approve(class="rounded-4 m-1 approve") }}
+                                                {{ form.allow(class="rounded-4 m-1 allow") }}
+                                                {{ form.deny(class="rounded-4 m-1 deny") }}
+                                            {% else %}
+                                                {{ form.allow(class="rounded-4 m-1 allow") }}
+                                                {{ form.deny(class="rounded-4 m-1 deny") }}
+                                            {% endif %}
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+{#                       Блок с сообщением #}
+                        <div class="max-h d-flex flex-column p-2 centrize">
+                            <div class="fs-1 position-relative h-100 d-flex justify-content-center align-items-center">
+                                <p>ВСЕ ЗАЯВКИ ОБРАБОТАНЫ</p>
+                                <svg width="50" height="50" viewBox="0 0 15 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 4L5.29289 8.29289C5.68342 8.68342 6.31658 8.68342 6.70711 8.29289L14 1" stroke="#349F7F" stroke-width="2" stroke-linecap="round"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+    </div>
+
+    <div class="modal fade overflow-auto" id="filesModal" tabindex="-1" aria-labelledby="filesModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content rounded-4 border-black border-3">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 text-m" id="filesModalLabel">ПРОСМОТР ФАЙЛОВ</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              {% if sudp_request['files'] %}
+                <div id="carouselFiles" class="carousel slide ">
+                  <div class="carousel-indicators bg-black opacity-50 rounded-1">
+                      {% for file in sudp_request['files']['filenames'] %}
+                          {% if loop.first %}
+                            <button type="button" data-bs-target="#carouselFiles" data-bs-slide-to="{{ loop.index0 }}" class="active" aria-current="true" aria-label="Slide {{ loop.index }}"></button>
+                          {% else %}
+                            <button type="button" data-bs-target="#carouselFiles" data-bs-slide-to="{{ loop.index0 }}" aria-label="Slide {{ loop.index }}"></button>
+                          {% endif %}
+                      {% endfor %}
+                  </div>
+                  <div class="carousel-inner">
+                    {% for file in sudp_request['files']['filenames'] %}
+                      {% if loop.first %}
+                        <div class="carousel-item active">
+                              <object
+                                data='http://192.168.8.175:9837/sudpapp/files/{{ file }}'
+                                type="application/pdf"
+                                class="d-block w-100 rounded-2"
+                                height="800"
+                              >
+
+                                <iframe
+                                  src='http://192.168.8.175:9837/sudpapp/files/{{ file }}'
+                                class="d-block w-100"
+                                height="800"
+                                >
+                                <p>Браузер не поддерживает просмотр PDF</p>
+                                </iframe>
+                              </object>
+                        </div>
+                      {% else %}
+                        <div class="carousel-item">
+                          <object
+                            data=http://192.168.8.175:9837/sudpapp/files/{{ file }}
+                            type="application/pdf"
+                            class="d-block w-100 rounded-2"
+                            height="800"
+                          >
+
+                              <iframe
+                                  src=http://192.168.8.175:9837/sudpapp/files/{{ file }}
+                                  class="d-block w-100"
+                                height="800"
+                              >
+                                <p>Браузер не поддерживает просмотр PDF</p>
+                            </iframe>
+                          </object>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+              {% else %}
+                  НЕТ ПРИЛОЖЕННЫХ ФАЙЛОВ
+              {% endif %}
+          </div>
+        </div>
+      </div>
+{% endblock %}

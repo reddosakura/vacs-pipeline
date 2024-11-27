@@ -1,0 +1,49 @@
+<div class="request-card mb-2 p-2 visitor-card {{ "bg-danger" if is_deleted }}">
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <div class="col text-m d-flex flex-column justify-content-center">
+                <p class="text-truncate fw-bold">
+                    <a data-bs-toggle="tooltip"
+                       data-bs-placement="left"
+                       title="{{ lastname }}">
+                        {% if is_deleted %}
+                            <del>{{ lastname }}</del>
+                        {% else %}
+                            {{ lastname }}
+                        {% endif %}
+                    </a>
+                </p>
+                <p class="text-truncate  fw-bold">
+                    <a data-bs-toggle="tooltip"
+                       data-bs-placement="left"
+                       title="{{ name }}">
+                        {% if is_deleted %}
+                            <del>{{ name }}</del>
+                        {% else %}
+                            {{ name }}
+                        {% endif %}
+                    </a>
+                </p>
+                <p class="text-truncate  fw-bold">
+                    <a data-bs-toggle="tooltip"
+                       data-bs-placement="left"
+                       title="{{ patronymic }}">
+                        {% if is_deleted %}
+                            <del>{{ patronymic }}</del>
+                        {% else %}
+                            {{ patronymic }}
+                        {% endif %}
+                    </a>
+                </p>
+
+            </div>
+            <div class="col-2 d-flex align-items-end flex-column mb-3">
+                <svg class="icon mt-auto" width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20.5" cy="20.5" r="20.5" fill="{{ "#dc3545" if is_deleted else "#BCF1E1" }}"/>
+                    <circle cx="20" cy="13" r="7" fill="black"/>
+                    <path d="M17.6806 21.9722C19.1643 21.3503 20.8357 21.3503 22.3194 21.9722L26.5259 23.7354C29.6345 25.0384 30.9116 28.7608 29.2575 31.6978C28.259 33.4707 26.3823 34.5676 24.3475 34.5676H15.6525C13.6177 34.5676 11.741 33.4707 10.7425 31.6978C9.08844 28.7608 10.3655 25.0384 13.4741 23.7354L17.6806 21.9722Z" fill="black"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>

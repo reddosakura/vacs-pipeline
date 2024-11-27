@@ -1,0 +1,30 @@
+version: '3'
+services:
+  vacs:
+    container_name: vacs
+    restart: always
+    build: .
+    ports:
+      - 5768:8000
+    depends_on:
+      - postgres
+  postgres:
+    restart: always
+    image: postgres
+    container_name: postgres
+    environment:
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=vacs_db
+    ports:
+      - 7689:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    restart: always
+    container_name: adminer01
+    ports:
+      - 4567:8080
+
+volumes:
+  pgdata:

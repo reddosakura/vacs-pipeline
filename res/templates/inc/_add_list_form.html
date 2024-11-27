@@ -1,0 +1,16 @@
+<form method="POST" class="col" enctype="multipart/form-data" onsubmit="return confirm('При загрузке данных из списка внесенные изменения будут утеряны. Вы уверены, что хотите продолжить ?')">
+    {{ upload_list_form.csrf_token }}
+    <div class="container m-0 p-0 h-100 align-content-center">
+        <div class="row m-0 p-0">
+            <div class="col w-50 ">
+                <label class="input-file d-flex h-100 align-items-center m-0 p-0 text-center">
+                    {{ upload_list_form.list_file(class="fs-5 regular-btn") }}
+                    <span class="input-file-btn fs-5 d-flex justify-content-center align-items-center">+ ДОБАВИТЬ СПИСОК</span>
+                </label>
+            </div>
+            <div class="col internal-btn m-0 p-0 w-50">
+                {{ upload_list_form.upload(class="fs-5 rounded-4 regular-btn", disabled=True) }}
+            </div>
+        </div>
+    </div>
+</form>

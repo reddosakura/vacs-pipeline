@@ -1,0 +1,36 @@
+<div class="visitor-subform container text-label rounded-4 mb-2 m-0">
+    <div class="row p-1">
+        <div class="col w-25 p-0 rounded-4 d-flex">
+            <div class="w-100 p-1">
+                {{ v_id }}
+                <div class="form-floating ">
+                    {{ lastname }}
+                    <label class="text-truncate mw-100" for="{{ lastname.name }}">ФАМИЛИЯ<span class="text-danger">*</span></label>
+
+                </div>
+            </div>
+        </div>
+        <div class="col w-25 rounded-4 d-flex p-0">
+            <div class="w-100 p-1">
+                <div class="form-floating">
+                    {{ name }}
+                    <label class="text-truncate mw-100" for="{{ name.name }}">ИМЯ<span class="text-danger">*</span></label>
+                </div>
+            </div>
+        </div>
+        <div class="col w-25 rounded-4 d-flex p-0">
+            <div class="w-100 p-1">
+                <div class="form-floating">
+                    {{ patronymic }}
+                    <label class="text-truncate mw-100" for={{ patronymic.name }}>ОТЧЕСТВО
+                    </label>
+                </div>
+            </div>
+        </div>
+            <div class="col w-25 p-1">
+                <div class="h-100 internal-btn">
+                    <input class="rounded-4 remove-visitor-subform fs-6 w-100 h-100 regular-btn" type="button" value="УДАЛИТЬ">
+                </div>
+        </div>
+    </div>
+</div>

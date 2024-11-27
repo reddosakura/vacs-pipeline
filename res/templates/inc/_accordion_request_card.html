@@ -1,0 +1,222 @@
+<div class="accordion-item mb-2">
+  <h2 class="accordion-header">
+    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#req-{{ req_id }}" aria-expanded="false" aria-controls="collapseTwo"> {# Нужно поменять data-bs-target #}
+      <div class="container-fluid">
+        <div class="row d-flex">
+            <div class="col-3 d-flex align-items-center mx-4">
+                {% if req_status == "РАССМОТРЕНИЕ"  %}
+                    <p class="cons-bg text-label text-m text-center">
+                        РАССМОТРЕНИЕ
+                    </p>
+                {% elif req_status == "СОГЛАСОВАНИЕ"  %}
+                    <p class="appr-bg text-label text-m text-center">
+                        СОГЛАСОВАНИЕ
+                    </p>
+                {% elif req_status == "НЕ ПРОШЛА СОГЛАСОВАНИЕ"  %}
+                    <p class="unappr-bg text-label text-m text-center">
+                        НЕ ПРОШЛА СОГЛАСОВАНИЕ
+                    </p>
+                {% elif req_status == "ПРОШЛА СОГЛАСОВАНИЕ"  %}
+                    <p class="passappr-bg text-label text-m text-center">
+                        ПРОШЛА СОГЛАСОВАНИЕ
+                    </p>
+                {% elif req_status == "ОТКЛОНЕНА"  %}
+                    <p class="deny-bg text-label text-m text-center">
+                        ОТКЛОНЕНА
+                    </p>
+                {% elif req_status == "ОДОБРЕНА"  %}
+                    <p class="allow-bg text-label text-m text-center">
+                        ОДОБРЕНА
+                    </p>
+                {% elif req_status == "ОТОЗВАНА"  %}
+                    <p class="reject-bg text-label text-m text-center">
+                        ОТОЗВАНА
+                    </p>
+                {% elif req_status == "ЗАКРЫТА"  %}
+                    <p class="close-bg text-label text-m text-center">
+                        ЗАКРЫТА
+                    </p>
+                {% else %}
+                    <p class="close-bg text-label text-m text-center">
+                        ЗАКРЫТА1
+                    </p>
+                {% endif %}
+            </div>
+            <div class="col d-flex align-items-center mx-4">
+                <p class="text-i text-center">
+                    ЗАЯВКА №{{ req_id }}
+                </p>
+            </div>
+            <div class="col d-flex align-items-center mx-4">
+                <p class=" text-label text-m text-center">
+                    {{ creator }}
+                </p>
+            </div>
+            <div class="col d-flex align-items-center mx-4">
+                <p class=" text-label text-m text-center">
+                    {{ req_type.upper() }}
+                </p>
+            </div>
+            <div class="col d-flex align-items-center mx-4">
+                <p class=" text-label text-m text-center">
+                    {{ created_date }}
+                </p>
+            </div>
+        </div>
+      </div>
+    </button>
+  </h2>
+  <div id="req-{{ req_id }}" class="accordion-collapse collapse" data-bs-parent="#accordionRequests"> {# Нужно поменять id на такой же как в таргете #}
+    <div class="accordion-body">
+        <div class="container-fluid">
+            <div class="row d-flex align-content-stretch">
+                <div class="col d-flex text-truncate flex-column align-items-center">
+                    <p class="text-s w-100 m-1">
+                        Срок действия заявки
+                    </p>
+                    <p class="text-m m-1 text-label text-center">
+                        С {{ from_date }} ПО {{ to_date }}
+                    </p>
+                    <p class="text-s w-100 m-1">
+                        Пропуск осуществлять
+                    </p>
+                    <p class="text-m m-1 text-label text-center">{{ passmode }}</p>
+                    <p class="text-s w-100 m-1">Договор</p>
+                     <div class="text-m m-1 text-truncate text-label text-center">
+                        <a data-bs-toggle="tooltip"
+                           data-bs-placement="left"
+                           title="{{ "БЕЗ ДОГОВОРА" if not contract else contract.upper() }}">
+                            {{ "БЕЗ ДОГОВОРА" if not contract else contract.upper() }}
+                        </a>
+                    </div>
+                    <p class="text-s w-100 m-1">Организация</p>
+                    <div class="text-m m-1 text-truncate text-label text-center">
+                        <a data-bs-toggle="tooltip"
+                           data-bs-placement="left"
+                           title="{{ "БЕЗ ОРГАНИЗАЦИИ" if not organization else organization.upper() }}">
+                            {{ "БЕЗ ОРГАНИЗАЦИИ" if not organization.upper() else organization.upper()}}
+                        </a>
+                    </div>
+                    <div class="w-100 internal-btn m-2">
+                        {% if files %}
+                            <input class="rounded-4 regular-btn" type="button" value="ПОСМОТРЕТЬ ФАЙЛЫ"  data-bs-toggle="modal" data-bs-target="#filesModal-{{ req_id }}">
+                        {% else %}
+                  НЕТ ПРИЛОЖЕННЫХ ФАЙЛОВ
+                        {% endif %}
+                    </div>
+                    <div class="w-100 internal-btn m-2">
+                        {% if edit %}
+                            <input class="rounded-4 regular-btn" type="button" value="РЕДАКТИРОВАТЬ" onclick="window.location='/sudpapp/requests/edit/{{ req_id }}';">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col d-flex flex-column align-items-center">
+                    <p class="text-s w-100 m-1">
+                        Временной интервал действия заявки
+                    </p>
+                    <p class="text-m m-1 text-label text-center">С {{ from_time }} ПО {{ to_time }}</p>
+                    <p class="text-s w-100">Статус согласования</p>
+                    <p data-simplebar data-simplebar-auto-hide="false" class="text-field overflow-auto h-100 w-100 mh-100 mw-100 overflow-auto">
+                        {% if approval %}
+                            {% if approval['approval_status'] == 'СОГЛАСУЮ' %}
+                                <span class="text-label p-1 passappr-bg">{{ "СОГЛАСУЮ" }}</span><br>
+                            {% else %}
+                                <span class="text-label p-1 unappr-bg">{{ "НЕ СОГЛАСУЮ" }}</span><br>
+                            {% endif %}
+                            {% if approval['approval_comments'] %}
+                                <br><span class="text-label p-1 text-label">КОММЕНТАРИЙ</span><br>
+                                {{ approval['approval_comments'] }}<br><br>
+                            {% else %}
+                                <br><span class="text-label p-1 text-label">{{ "БЕЗ КОММЕНТАРИЯ" }}</span><br>
+                            {% endif %}
+                            <br>{{ approval['lastname'] }} {{ approval['name'] }} {{ approval['patronymic'] if approval['patronymic']}}
+                            <br><span class="text-label p-1 text-label">Дата согласования:</span><br>
+                            {{ approval['created_date'] }}
+                        {% else %}
+                            {% if req_type.upper() == 'ОДНОРАЗОВАЯ' %}
+                                 <span class="text-label p-1 cons-bg">{{ "РАССМОТРЕНИЕ" }}</span><br>
+                            {% else %}
+                                 <span class="text-label p-1 appr-bg">{{ "НА СОГЛАСОВАНИИ" }}</span><br>
+                            {% endif %}
+
+                        {% endif %}
+                        <br><span class="fw-bold text-uppercase">{{ req_comment.split(":")[0] }}</span>
+                        <br><span>КОММЕНТАРИЙ:</span>
+                        <br><span >{{ req_comment.split(":")[1] }}</span>
+
+                    </p>
+                        <div class="w-100 internal-btn mt-2">
+                            {% if req_status != "ОТОЗВАНА" and req_status != "ОТКЛОНЕНА" and req_status != "НЕ ПРОШЛА СОГЛАСОВАНИЕ" %}
+                                <form method="post" class="w-100" action="?request={{ req_id }}" onsubmit="return confirm('Вы уверены, что хотите отозвать заявку ?')">
+                                    {{ recall_form.csrf_token }}
+                                    {{ recall_form.recall_button(class=" rounded-4 regular-btn") }}
+                                </form>
+                            {% endif %}
+                        </div>
+                        <div class="w-100 internal-btn mt-2">
+                            {% if mode == "requester" and (req_status == "ОТОЗВАНА" or req_status == "ОТКЛОНЕНА" or req_status == "НЕ ПРОШЛА СОГЛАСОВАНИЕ") %}
+                                <form method="post" class="w-100" action="?request={{ req_id }}" onsubmit="return confirm('Вы уверены, что хотите удалить заявку ?')">
+                                    {{ delete_form.csrf_token }}
+                                    {{ delete_form.delete_button(class=" rounded-4 regular-btn") }}
+                                </form>
+                            {% endif %}
+                        </div>
+                </div>
+                <div class="col d-flex flex-column align-items-center">
+                    <div class="container-fluid visual-block h-40v">
+                        <div class="row h-10">
+                            <p class="text-i w-100 text-center">
+                                Посетители
+                            </p>
+                        </div>
+                        <div class="row max-h">
+                            <div data-simplebar data-simplebar-auto-hide="false" class="overflow-auto h-95 p-3" >
+                                <div class="col">
+                                    {% for v in visitors %}
+                                       {% with lastname=v["lastname"], name=v["name"], patronymic=v["patronymic"], is_deleted=v["is_deleted"] %}
+                                           {% if mode == 'requester' %}
+                                               {% if not v["is_deleted"] %}
+                                                   {% include 'inc/_small_visitor_card.html' %}
+                                               {% endif %}
+                                           {% else %}
+                                                   {% include 'inc/_small_visitor_card.html' %}
+                                           {% endif %}
+                                       {% endwith %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="container-fluid visual-block h-40v">
+                        <div class="row h-10">
+                            <p class="text-i w-100 text-center">
+                                Автомобили
+                            </p>
+                        </div>
+                        <div class="row max-h">
+                            <div data-simplebar data-simplebar-auto-hide="false" class="overflow-auto h-95 p-3" >
+                                <div class="col">
+                                    {% for c in cars %}
+                                        {% with carmodel=c["carmodel"], govern_num=c["govern_num"], is_deleted=c["is_deleted"] %}
+                                           {% if mode == 'requester' %}
+                                               {% if not c["is_deleted"] %}
+                                                    {% include 'inc/_small_car_card.html' %}
+                                               {% endif %}
+                                           {% else %}
+                                                   {% include 'inc/_small_car_card.html' %}
+                                           {% endif %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

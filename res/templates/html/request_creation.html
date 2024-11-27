@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% block additional_res %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function(element){
+                return new bootstrap.Tooltip(element);
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', path='/js/jquery.js') }}"></script>
+    <script>
+        function switchCheck() {
+            const switch_check = document.getElementById("switch_check");
+            if (switch_check.checked === false){
+                window.location = '/sudpapp/requests/my'
+            } else {
+                window.location = '/sudpapp/requests/creation'
+            }
+        }
+    </script>
+    <script src="{{ url_for('static', path='/lib/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/jquery.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.0.1/mammoth.browser.min.js"></script>
+
+    <script>
+    $(function() {
+        var oldScroll = window.onscroll;
+        $(document).on('focus', 'input', function(e) {
+            window.onscroll = function () {
+                window.scroll(0,0);
+            } ;
+            setTimeout(function() {
+                window.onscroll = oldScroll;
+            }, 100);
+        });
+
+    });
+    </script>
+
+{% endblock %}
+{% block content %}
+        <div class="w-100 h-100 d-flex">
+            {% include 'inc/_creation_form.html' %}
+        </div>
+
+        <div class="modal fade overflow-hidden" id="validationErrorModal" tabindex="-1" aria-labelledby="validationErrorModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content rounded-4 border-black border-3">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5 text-m" id="validationErrorModalLabel"><span class="text-danger">ОШИБКА</span></h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body fs-2">
+                    К заявке должен быть прикреплен хотя бы один посетитель или автомобиль
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="modal fade overflow-hidden" id="governNumValidationErrorModal" tabindex="-1" aria-labelledby="governNumValidationErrorModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content rounded-4 border-black border-3">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5 text-m" id="governNumValidationErrorModalLabel"><span class="text-danger">ОШИБКА</span></h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body fs-2">
+                    Государственный номер должен быть формата <span class="text-danger">А777АА77</span> или <span class="text-danger">А777АА777</span>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="modal fade overflow-hidden" id="dateValidationErrorModal" tabindex="-1" aria-labelledby="dateValidationErrorModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content rounded-4 border-black border-3">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5 text-m" id="dateValidationErrorModalLabel"><span class="text-danger">ОШИБКА</span></h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body fs-2">
+                    Дата начала действия заявки не может быть позже даты окончания действия заявки
+                </div>
+              </div>
+            </div>
+        </div>
+
+    <script>
+            $(document).ready(function() {
+            $('.add-car-subform').click(function() {
+                const message = document.getElementById("car-message");
+                if (message){
+                    message.remove();
+                }
+                let allCarsFieldWrapper = document.getElementById('cars_list_container');
+                let allCars = allCarsFieldWrapper.getElementsByTagName('input');
+                let carsInputIds = []
+                for(let i = 0; i < allCars.length; i++) {
+                    carsInputIds.push(parseInt(allCars[i].name.split('-')[1]));
+                }
+                let newname = `${allCars.length / 3}`;
+                if (allCars.length > 0){
+                    let visitorsInputIds = []
+                    for (let j = 0; j < allCars.length; j++) {
+                        visitorsInputIds.push(parseInt(allCars[j].id.split('-')[1]))
+                    }
+                    newname = Math.max(...visitorsInputIds.filter((number) => !isNaN(number))) + 1;
+                }
+
+                let html = `<div class="car-subform container text-label rounded-4 mb-2 m-0"><div class="row p-1"><div class="col w-25 rounded-4 d-flex p-0"><div class="w-100 p-1"><div class="form-floating"><input id="cars_list-${newname}-carmodel" name="cars_list-${newname}-carmodel" class="form-control fs-5 regular-input" placeholder="МОДЕЛЬ" required><label class="text-truncate mw-100" for="cars_list-${newname}-model">МОДЕЛЬ<span class="text-danger">*</span></label></div></div></div><div class="col w-25 rounded-4 d-flex p-0"><div class="w-100 p-1"><div class="form-floating"><input id="cars_list-${newname}-govern_num" name="cars_list-${newname}-govern_num" class="form-control fs-5 regular-input govern_num" placeholder="ГОС. НОМЕР" required><label class="text-truncate mw-100" for="cars_list-${newname}-govern_num">ГОС. НОМЕР<span class="text-danger">*</span></label></div></div></div><div class="col w-25 p-1"><div class="h-100 internal-btn"><input class="remove-car-subform rounded-4 fs-6 w-100 h-100 regular-btn" type="button" value="УДАЛИТЬ"></div></div></div></div>`;
+                $('#cars_list_container').append(html);
+            });
+
+
+            $('#cars_list_container').on('click', '.remove-car-subform', function() {
+                $(this).closest('.car-subform').remove();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.add-visitor-subform').click(function() {
+                const message = document.getElementById("visitor-message");
+                if (message){
+                    message.remove();
+                }
+                let allVisitorsFieldWrapper = document.getElementById('visitors_list_container');
+                let allVisitors = allVisitorsFieldWrapper.getElementsByTagName('input');
+                let visitorsInputIds = []
+                for(let i = 0; i < allVisitors.length; i++) {
+                    visitorsInputIds.push(parseInt(allVisitors[i].name.split('-')[1]));
+                }
+
+                let newname = `${allVisitors.length / 4}`;
+                if (allVisitors.length > 0){
+                    let visitorsInputIds = []
+                    for (let j = 0; j < allVisitors.length; j++) {
+                        visitorsInputIds.push(parseInt(allVisitors[j].id.split('-')[1]))
+                    }
+                    newname = Math.max(...visitorsInputIds.filter((number) => !isNaN(number))) + 1;
+                }
+                let html = `<div class="visitor-subform container text-label rounded-4 mb-2 m-0"><div class="row p-1"><div class="col w-25 p-0 rounded-4 d-flex"><div class="w-100 p-1"><div class="form-floating "><input id=visitors_list-${newname}-lastname name=visitors_list-${newname}-lastname class="form-control fs-5 regular-input" placeholder="Фамилия" required><label class="text-truncate mw-100" for="lastname">ФАМИЛИЯ<span class="text-danger">*</span></label></div></div></div><div class="col w-25 rounded-4 d-flex p-0"><div class="w-100 p-1"><div class="form-floating"><input id=visitors_list-${newname}-name name=visitors_list-${newname}-name class="form-control fs-5 regular-input" placeholder="Имя" required><label class="text-truncate mw-100" for="name">ИМЯ<span class="text-danger">*</span></label></div></div></div><div class="col w-25 rounded-4 d-flex p-0"><div class="w-100 p-1"><div class="form-floating"><input id=visitors_list-${newname}-patronymic name=visitors_list-${newname}-patronymic class="form-control fs-5 regular-input" placeholder="Отчество" ><label class="text-truncate mw-100" for="patronymic">ОТЧЕСТВО</label></div></div></div><div class="col w-25 p-1"><div class="h-100 internal-btn"><input class="rounded-4 remove-visitor-subform fs-6 w-100 h-100 regular-btn" type="button" value="УДАЛИТЬ"></div></div></div></div>`;
+                $('#visitors_list_container').append(html);
+            });
+
+            $('#visitors_list_container').on('click', '.remove-visitor-subform', function() {
+                $(this).closest('.visitor-subform').remove();
+            });
+        });
+    </script>
+    <script>
+        const fileInput = document.getElementById("add_files_btn");
+
+        fileInput.addEventListener("change", (event) => {
+          const files = event.target.files;
+          let files_block = $('#files-block').empty();
+          for (let i = 0; i < files.length; i++) {
+              let html = `<div class="file-item container-fluid mh-90 p-2 mt-2 mb-2 rounded-4 text-label"><div class="row"><div class="col d-flex align-content-center"><div class="text-truncate w-100 text-center fs-4">${files[i].name}</div></div></div></div>`;
+              files_block.append(html);
+          }
+        });
+    </script>
+
+    <script>
+
+        function validateForm() {
+            try {
+              let allVisitorsFieldWrapper = document.getElementById('visitors_list_container');
+              let allVisitors = allVisitorsFieldWrapper.getElementsByTagName('input');
+              let allCarsFieldWrapper = document.getElementById('cars_list_container');
+              let allCars = allCarsFieldWrapper.getElementsByTagName('input');
+
+              let from_date = new Date(document.querySelector('#fromdate').value);
+              const to_date =  new Date(document.querySelector('#todate').value);
+
+              if (from_date > to_date) {
+                $('#dateValidationErrorModal').modal('show');
+                return false;
+              }
+
+              if (allVisitors.length === 0 && allCars.length === 0) {
+                $('#validationErrorModal').modal('show');
+                return false;
+              }
+            } catch (e) {
+                console.log(e);
+                return false
+            }
+
+
+        }
+    </script>
+    <script type="module" src="{{ url_for('static', path='/js/upload_file.js') }}"></script>
+{% endblock %}

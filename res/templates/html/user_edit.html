@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block additional_res %}
+	<script src="{{ url_for('static', path='/js/collapse.js') }}"></script>
+	<script src="{{ url_for('static', path='/js/set_switch_trigger.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', path='/lib/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            let tooltipList = tooltipTriggerList.map(function(element){
+                return new bootstrap.Tooltip(element);
+            });
+        });
+
+    </script>
+
+{% endblock %}
+{% block content %}
+    <div class="max-h p-2">
+        <div class="d-flex flex-column h-100  visual-block p-3 gap-3">
+            <div class="d-flex justify-content-center flex-wrap gap-4 h-95 overflow-auto">
+                <form method="post" class=".form-class" onsubmit="return confirm('Вы уверены, что хотите выполнить это действие?')">
+                    {{ form.csrf_token }}
+                    <div class="d-flex flex-column gap-3">
+                        <div class="form-floating">
+                            {{ form.lastname(class='form-control fs-4 regular-input', id='lastname',  placeholder="ФАМИЛИЯ") }}
+                            <label for="lastname">ФАМИЛИЯ<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="form-floating">
+                            {{ form.name(class='form-control fs-4 regular-input', id='name', placeholder="Имя") }}
+                            <label class="fs-6" for="name">ИМЯ<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="form-floating">
+                            {{ form.patronymic(class='form-control fs-4 regular-input', id='patronymic', placeholder="Отчество") }}
+                            <label class="fs-6" for="patronymic">ОТЧЕСТВО</label>
+                        </div>
+
+                        <div class="form-floating">
+                            {{ form.speciality(class='form-control fs-4 regular-input',  style="height: 8vmax", id='speciality', placeholder="Должность") }}
+                            <label class="fs-6" for="speciality">ДОЛЖНОСТЬ<span class="text-danger">*</span></label>
+                        </div>
+
+                        <div class="d-flex flex-column mt-2">
+                            <label class="fs-6" for="role">РОЛЬ<span class="text-danger">*</span></label>
+                            {{ form.role(class='form-select mt-2 border-black border-3') }}
+                        </div>
+
+                        <div class="d-flex mt-2">
+                            {{ form.selector(class='checkbox me-2 form-check-input', onclick='commentCollapse()') }}
+                            {{ form.selector.label }}
+                        </div>
+
+                        <div class="form-floating collapse-area display-none">
+                            {{ form.login(class='collapse-area display-none form-control fs-4 regular-input', id='login', placeholder="Логин") }}
+                            <label class="fs-6 collapse-area display-none" for="login">ЛОГИН<span class="text-danger">*</span></label>
+                        </div>
+
+                        <div class="form-floating collapse-area display-none">
+                            {{ form.password(class='collapse-area display-none form-control fs-4 regular-input', id='password', placeholder="Пароль") }}
+                            <label class="fs-6 collapse-area display-none" for="password">ПАРОЛЬ</label>
+                        </div>
+
+                        <div class="col-2 d-flex internal-btn w-100">
+                            {{ form.edit_btn(class="w-100 rounded-4 regular-btn ") }}
+                        </div>
+
+                        <div class="col-2 d-flex internal-btn w-100">
+                            {{ form.delete_btn(class="w-100 rounded-4 regular-btn deny", data_toggle="modal", data_target="#confirm-submit") }}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

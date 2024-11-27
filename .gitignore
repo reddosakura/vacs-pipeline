@@ -1,0 +1,7 @@
+.vscode/
+__pycache__/
+api/__pycache__/
+errors.log
+sudpapp/__pycache__/
+uploads/
+.history/

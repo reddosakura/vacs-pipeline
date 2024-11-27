@@ -1,0 +1,3 @@
+[console_scripts]
+jsonschema2popo = jsonschema2popo.jsonschema2popo:main
+

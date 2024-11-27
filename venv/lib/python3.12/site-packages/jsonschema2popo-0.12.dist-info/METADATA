@@ -1,0 +1,46 @@
+Metadata-Version: 2.0
+Name: jsonschema2popo
+Version: 0.12
+Summary: Converts a JSON Schema to a Plain Old Python Object class
+Home-page: https://github.com/frx08/jsonschema2popo
+Author: cruc.io
+Author-email: frx089@gmail.com
+License: MIT License
+Keywords: python json-schema code-generator
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: >=3.4
+Description-Content-Type: text/markdown
+Requires-Dist: Jinja2 (>=2.10)
+Requires-Dist: networkx (==1.9)
+
+# JSONSCHEMA2POPO
+
+A converter to extract 'Plain Old Python Object' classes from JSON Schema files.
+Currenty compatible with python 3.4+
+
+## Installation
+
+    pip install jsonschema2popo
+
+## Usage
+
+Basic:
+
+    jsonschema2popo -o /path/to/output_file.py /path/to/json_schema.json
+
+object JSON encoding:
+
+    import json
+
+    g = GeneratedClass()
+    json.dumps(g.as_dict())
+
+

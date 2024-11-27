@@ -1,0 +1,57 @@
+<div class="d-flex flex-column request-card spec-card m-0 mb-3 p-3">
+    <div class="row m-1">
+        <div class="col p-0 text-truncate">
+            <div class="text-m d-flex flex-column justify-content-center">
+                <div class="text-s">
+                    {% if spec['model'] %}
+                        <a data-bs-toggle="tooltip"
+                           data-bs-placement="bottom"
+                           title="{{ spec['model'] }}">
+                            {{ spec['model'] }}
+                        </a>
+                    {% else %}
+                    	НЕТ ДАННЫХ О МОДЕЛИ
+                    {% endif %}
+                </div>
+                <div class="text-m fw-bold">
+                    {{ spec['type'] if spec['type'] else "Без типа" }}
+                </div>
+                <div class="text-m fw-bold">
+                    {{ spec['govern_num'] }}
+                </div>
+            </div>
+        </div>
+        <div class="col-5 p-0">
+            <div class="d-flex flex-column justify-content-start">
+                <div class="text-s text-end">
+                    ДАТА:
+                </div>
+                <div class="text-m text-end fw-bold">
+                    {{ spec['fdate'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m-1">
+        <div class="col p-0">
+            <div class="d-flex flex-column justify-content-end">
+                <div class="text-s">
+                    СТАТУС:
+                </div>
+                <div class="text-m fw-bold">
+                    {{ spec['status'] }}
+                </div>
+            </div>
+        </div>
+        <div class="col-5 p-0">
+            <div class="d-flex flex-column justify-content-end">
+                <div class="text-s text-end">
+                    ВРЕМЯ:
+                </div>
+                <div class="text-m text-end fw-bold">
+                    {{ spec['time'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
