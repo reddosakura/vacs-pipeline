@@ -135,7 +135,7 @@ async def _passages(request: Request):
             return response
 
     passages = await build_request(
-        url="host.docker.internal:8000/" + f"api/v1/read/passages/actual",
+        url="http://host.docker.internal:5768/" + f"api/v1/read/passages/actual",
         access_token=access_token
     )
 

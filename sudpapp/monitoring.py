@@ -40,7 +40,7 @@ async def _process(request: Request):
         print("monitoring init")
 
         raw_actual_requests = await build_request(
-            url="host.docker.internal:8000/" + "api/v1/read/requests/actual?monitoring=true",
+            url="http://host.docker.internal:5768/" + "api/v1/read/requests/actual?monitoring=true",
             access_token=access_token
         )
 
@@ -69,11 +69,11 @@ async def _process(request: Request):
         exit_form = ExitForm(request)
         if request.method == "GET":
             cars_on_territory = await build_request(
-                url="host.docker.internal:8000/" + f"api/v1/read/transport/on_territory?mode={OnTerritoryMode.CARS.value}",
+                url="http://host.docker.internal:5768/" + f"api/v1/read/transport/on_territory?mode={OnTerritoryMode.CARS.value}",
                 access_token=access_token
             )
             spectransport = await build_request(
-                url="host.docker.internal:8000/" + f"api/v1/read/transport/"
+                url="http://host.docker.internal:5768/" + f"api/v1/read/transport/"
                                             f"on_territory?mode={OnTerritoryMode.SPEC_TRANSPORT.value}",
                 access_token=access_token
             )
@@ -118,7 +118,7 @@ async def _process(request: Request):
 
                         if r['passcount'] + 1 == (len(r['visitor']) + len(r['car'])):
                             await build_request(
-                                url="host.docker.internal:8000/" + f"api/v1/update/request/close/{request_id}",
+                                url="http://host.docker.internal:5768/" + f"api/v1/update/request/close/{request_id}",
                                 access_token=access_token,
                                 method="POST",
                             )
@@ -131,13 +131,13 @@ async def _process(request: Request):
                         "pass_date": datetime.now().isoformat()
                     },
                     method="POST",
-                    url="host.docker.internal:8000/" + f"api/v1/create/passage/visitor",
+                    url="http://host.docker.internal:5768/" + f"api/v1/create/passage/visitor",
                     access_token=access_token
                 )
                 print("PUT update")
                 await build_request(
                     method="PUT",
-                    url="host.docker.internal:8000/" + f"api/v1/update/visitor/passed/"
+                    url="http://host.docker.internal:5768/" + f"api/v1/update/visitor/passed/"
                                                 f"{form_data['visitors_radio_group']}?passmode=true",
                     access_token=access_token
                 )
@@ -152,7 +152,7 @@ async def _process(request: Request):
                         "pass_date": datetime.now().isoformat()
                     },
                     method="POST",
-                    url="host.docker.internal:8000/" + f"api/v1/create/passage/car",
+                    url="http://host.docker.internal:5768/" + f"api/v1/create/passage/car",
                     access_token=access_token
                 )
                 await build_request(
@@ -166,7 +166,7 @@ async def _process(request: Request):
                         "car_id": form_data['cars_radio_group']
                     },
                     method="POST",
-                    url="host.docker.internal:8000/" + f"api/v1/create/on_terr/car",
+                    url="http://host.docker.internal:5768/" + f"api/v1/create/on_terr/car",
                     access_token=access_token
                 )
 
@@ -187,12 +187,12 @@ async def _process(request: Request):
                             "pass_date": datetime.now().isoformat()
                         },
                         method="POST",
-                        url="host.docker.internal:8000/" + f"api/v1/create/passage/spectransport",
+                        url="http://host.docker.internal:5768/" + f"api/v1/create/passage/spectransport",
                         access_token=access_token
                     )
                     await build_request(
                         method="DELETE",
-                        url="host.docker.internal:8000/" + f"api/v1/delete/on_terr/spec_trans/{exit_value['id']}",
+                        url="http://host.docker.internal:5768/" + f"api/v1/delete/on_terr/spec_trans/{exit_value['id']}",
                         access_token=access_token
                     )
                     return RedirectResponse(url=f'/sudpapp/monitoring', status_code=status.HTTP_302_FOUND)
@@ -204,13 +204,13 @@ async def _process(request: Request):
                             "pass_date": datetime.now().isoformat()
                         },
                         method="POST",
-                        url="host.docker.internal:8000/" + f"api/v1/create/passage/car",
+                        url="http://host.docker.internal:5768/" + f"api/v1/create/passage/car",
                         access_token=access_token
                     )
 
                     await build_request(
                         method="DELETE",
-                        url="host.docker.internal:8000/" + f"api/v1/delete/on_terr/car/{exit_value['id']}",
+                        url="http://host.docker.internal:5768/" + f"api/v1/delete/on_terr/car/{exit_value['id']}",
                         access_token=access_token
                     )
                     return RedirectResponse(url=f'/sudpapp/monitoring', status_code=status.HTTP_302_FOUND)
@@ -228,11 +228,11 @@ async def _process(request: Request):
                         "pass_date": datetime.now().isoformat()
                     },
                     method="POST",
-                    url="host.docker.internal:8000/" + f"api/v1/create/passage/spectransport",
+                    url="http://host.docker.internal:5768/" + f"api/v1/create/passage/spectransport",
                     access_token=access_token
                 )
                 await build_request(
-                    url="host.docker.internal:8000/" + f"api/v1/create/on_terr/spectransport",
+                    url="http://host.docker.internal:5768/" + f"api/v1/create/on_terr/spectransport",
                     access_token=access_token,
                     method="POST",
                     data={

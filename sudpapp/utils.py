@@ -158,7 +158,7 @@ async def _check_date(request, date):
     access_token = request.cookies.get('access_token')
 
     req = await build_request(
-        "host.docker.internal:8000/" +
+        "http://host.docker.internal:5768/" +
         f"api/v1/read/holidays",
         access_token=access_token)
     for holiday in req.json():

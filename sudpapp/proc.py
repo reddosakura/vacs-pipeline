@@ -47,9 +47,9 @@ async def _get_context(request: Request,
     else:
         checked_state = False
 
-    url = "host.docker.internal:8000/" + f"api/v1/read/requests/actual/min?request_status={mode}"
+    url = "http://host.docker.internal:5768/" + f"api/v1/read/requests/actual/min?request_status={mode}"
     if 'admin' in scopes and mode == RequestStatus.APPROVE.value:
-        url = "host.docker.internal:8000/" + "api/v1/read/requests/actual/min?&forced=true"
+        url = "http://host.docker.internal:5768/" + "api/v1/read/requests/actual/min?&forced=true"
 
     min_requests = await build_request(
         url,
@@ -66,7 +66,7 @@ async def _get_context(request: Request,
             _id = min_response_json[_id]['id']
 
         raw_request = await build_request(
-            "host.docker.internal:8000/" + f"api/v1/read/request/{_id}",
+            "http://host.docker.internal:5768/" + f"api/v1/read/request/{_id}",
             access_token=access_token
         )
         intr_id = raw_request.json()['internal_req_id']
@@ -167,7 +167,7 @@ async def _process(request: Request,
         try:
 
             _request = await build_request(
-                url="host.docker.internal:8000/" + f"api/v1/read/request/{_id}",
+                url="http://host.docker.internal:5768/" + f"api/v1/read/request/{_id}",
                 access_token=access_token
             )
 
@@ -190,7 +190,7 @@ async def _process(request: Request,
                 }
                 iternal_id = request.cookies.get("intr_request_id")
                 await build_request(
-                    "host.docker.internal:8000/" + f"api/v1/create/approval",
+                    "http://host.docker.internal:5768/" + f"api/v1/create/approval",
                     data={
                         "lastname": decoded_jwt['lastname'],
                         "name": decoded_jwt['name'],
@@ -211,7 +211,7 @@ async def _process(request: Request,
                 }
                 iternal_id = request.cookies.get("intr_request_id")
                 await build_request(
-                    "host.docker.internal:8000/" + f"api/v1/create/approval",
+                    "http://host.docker.internal:5768/" + f"api/v1/create/approval",
                     data={
                         "lastname": decoded_jwt['lastname'],
                         "name": decoded_jwt['name'],
@@ -226,7 +226,7 @@ async def _process(request: Request,
                 )
 
             req = await build_request(
-                "host.docker.internal:8000/" + f"api/v1/update/request/status/{{req_id}}?req_id={_id}",
+                "http://host.docker.internal:5768/" + f"api/v1/update/request/status/{{req_id}}?req_id={_id}",
                 data=process_data,
                 method="POST",
                 access_token=access_token

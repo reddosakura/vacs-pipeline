@@ -1,0 +1,30 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - pipe00
+
+    pull_request:
+      branches:
+        - pipe00
+
+jobs:
+  vacs_sudp_checkstyle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git clone repo
+        uses: actions/checkout@v2
+
+      - name: Set version Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12.6'
+
+      - name: Install packages
+        run: |
+          pip install flake8
+
+      - name: Run linter
+        run: |
+          flake8 .

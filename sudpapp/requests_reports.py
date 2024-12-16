@@ -46,7 +46,7 @@ async def _reports(request: Request):
             if search_form.search_field.data == "":
                 return RedirectResponse(url='/sudpapp/reports', status_code=status.HTTP_302_FOUND)
 
-            url = "host.docker.internal:8000/" + f"api/v1/read/search/{search_form.search_field.data}?monitoring=false"
+            url = "http://host.docker.internal:5768/" + f"api/v1/read/search/{search_form.search_field.data}?monitoring=false"
             print(request.cookies.get("is_requests_filtered"), "<-- filtred")
             if request.cookies.get("is_requests_filtered") != "False":
                 url = str(
@@ -128,7 +128,7 @@ async def _reports(request: Request):
             try:
                 request_id = request.query_params.get('request', None)
                 req = await build_request(
-                    "host.docker.internal:8000/" + f"api/v1/update/request/status/{{req_id}}?req_id={request_id}",
+                    "http://host.docker.internal:5768/" + f"api/v1/update/request/status/{{req_id}}?req_id={request_id}",
                     data={
                         "status": "ОТОЗВАНА",
                         "comment": f"Отозвал(а) {creator}:\n"
@@ -145,7 +145,7 @@ async def _reports(request: Request):
                 return RedirectResponse(url='/sudpapp/auth')
 
     raw_actual_requests = await build_request(
-        url="host.docker.internal:8000/" + "api/v1/read/requests/actual?monitoring=false",
+        url="http://host.docker.internal:5768/" + "api/v1/read/requests/actual?monitoring=false",
         access_token=access_token
     )
 

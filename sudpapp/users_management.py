@@ -35,7 +35,7 @@ async def _users(request: Request):
     creator = f"{decoded_jwt['name'][0]}. {decoded_jwt['patronymic'][0]}. {decoded_jwt['lastname']}"
 
     actual_users = await build_request(
-        url="host.docker.internal:8000/" + "api/v1/read/users",
+        url="http://host.docker.internal:5768/" + "api/v1/read/users",
         access_token=access_token
     )
 
@@ -44,7 +44,7 @@ async def _users(request: Request):
     if await form.validate_on_submit():
         if form.create_btn.data:
             await build_request(
-                url="host.docker.internal:8000/" + "api/v1/create/user",
+                url="http://host.docker.internal:5768/" + "api/v1/create/user",
                 method="POST",
                 data={
                     "lastname": form.lastname.data,
@@ -95,7 +95,7 @@ async def _users(request: Request,
     creator = f"{decoded_jwt['name'][0]}. {decoded_jwt['patronymic'][0]}. {decoded_jwt['lastname']}"
 
     _user = await build_request(
-        "host.docker.internal:8000/" + f"api/v1/read/user/{_id}",
+        "http://host.docker.internal:5768/" + f"api/v1/read/user/{_id}",
         access_token=access_token,
     )
 
@@ -149,7 +149,7 @@ async def _users(request: Request,
         if form.edit_btn.data:
             if not form.selector.data:
                 await build_request(
-                    url="host.docker.internal:8000/" + f"api/v1/update/user/base/{_id}",
+                    url="http://host.docker.internal:5768/" + f"api/v1/update/user/base/{_id}",
                     method="PUT",
                     data={
                         "lastname": form.lastname.data,
@@ -166,7 +166,7 @@ async def _users(request: Request,
                 return RedirectResponse(url='/sudpapp/users', status_code=status.HTTP_302_FOUND)
             else:
                 await build_request(
-                    url="host.docker.internal:8000/" + f"api/v1/update/user/full/{_id}",
+                    url="http://host.docker.internal:5768/" + f"api/v1/update/user/full/{_id}",
                     method="PUT",
                     data={
                         "lastname": form.lastname.data,
@@ -185,7 +185,7 @@ async def _users(request: Request,
                 return RedirectResponse(url='/sudpapp/users', status_code=status.HTTP_302_FOUND)
         elif form.delete_btn.data:
             await build_request(
-                url="host.docker.internal:8000/" + f"api/v1/delete/user/{_id}",
+                url="http://host.docker.internal:5768/" + f"api/v1/delete/user/{_id}",
                 method="DELETE",
                 access_token=access_token
             )

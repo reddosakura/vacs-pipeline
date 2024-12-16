@@ -97,7 +97,7 @@ async def _send_request(request: Request):
             print(request_base, "<-- Request")
 
             req = await build_request(
-                "host.docker.internal:8000/" + "api/v1/create/request",
+                "http://host.docker.internal:5768/" + "api/v1/create/request",
                 data=request_base,
                 method="POST",
                 access_token=access_token
@@ -116,7 +116,7 @@ async def _send_request(request: Request):
 
             if form_data["visitors_list"]:
                 await build_request(
-                    "host.docker.internal:8000/" + "api/v1/create/visitors",
+                    "http://host.docker.internal:5768/" + "api/v1/create/visitors",
                     data=[await _validate_visitors(v) | additional_data for v in form_data['visitors_list']],
                     method="POST",
                     access_token=access_token
@@ -124,7 +124,7 @@ async def _send_request(request: Request):
 
             if form_data["cars_list"]:
                 await build_request(
-                    "host.docker.internal:8000/" + "api/v1/create/cars",
+                    "http://host.docker.internal:5768/" + "api/v1/create/cars",
                     data=[await _validate_cars(c) | additional_data for c in form_data['cars_list']],
                     method="POST",
                     access_token=access_token
@@ -200,7 +200,7 @@ async def creation(request: Request):
             if search_form.search_field.data == "":
                 return RedirectResponse(url='/sudpapp/requests/my', status_code=status.HTTP_302_FOUND)
 
-            url = ("host.docker.internal:8000/" +
+            url = ("http://host.docker.internal:5768/" +
                    f"api/v1/read/search/{search_form.search_field.data}?monitoring=false&creator={creator}")
 
             raw_actual_requests = await build_request(
@@ -237,7 +237,7 @@ async def creation(request: Request):
             try:
                 request_id = request.query_params.get('request', None)
                 req = await build_request(
-                    "host.docker.internal:8000/" + f"api/v1/update/request/status/{{req_id}}?req_id={request_id}",
+                    "http://host.docker.internal:5768/" + f"api/v1/update/request/status/{{req_id}}?req_id={request_id}",
                     data={
                         "status": "ОТОЗВАНА",
                         "comment": f"Отозвал(а) {creator}:\n"
@@ -258,7 +258,7 @@ async def creation(request: Request):
             try:
                 request_id = request.query_params.get('request', None)
                 req = await build_request(
-                    "host.docker.internal:8000/" + f"api/v1/delete/request/{request_id}",
+                    "http://host.docker.internal:5768/" + f"api/v1/delete/request/{request_id}",
                     method="PUT",
                     access_token=access_token
                 )

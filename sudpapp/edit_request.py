@@ -105,7 +105,7 @@ async def _send_request(request: Request, _id: int):
             pprint(request_base)
             print("<-- Request base")
             _request = await build_request(
-                "host.docker.internal:8000/" + f"api/v1/read/request/{_id}",
+                "http://host.docker.internal:5768/" + f"api/v1/read/request/{_id}",
                 access_token=access_token,
             )
 
@@ -122,7 +122,7 @@ async def _send_request(request: Request, _id: int):
             }
 
             # delete_passages_visitors = await build_request(
-            #     "host.docker.internal:8000/" + "api/v1/update/bulk/visitors",
+            #     "http://host.docker.internal:5768/" + "api/v1/update/bulk/visitors",
             #     data=[{
             #               "id": visitor.id,
             #               "lastname": visitor.lastname.upper(),
@@ -140,7 +140,7 @@ async def _send_request(request: Request, _id: int):
             # )
             #
             # delete_passages_cars = await build_request(
-            #     "host.docker.internal:8000/" + "api/v1/update/bulk/cars",
+            #     "http://host.docker.internal:5768/" + "api/v1/update/bulk/cars",
             #     data=[{
             #               "id": car.id,
             #               "carmodel": car.carmodel.upper() if car.carmodel.upper() else str(),
@@ -162,7 +162,7 @@ async def _send_request(request: Request, _id: int):
             #     return RedirectResponse(url='/sudpapp/auth')
 
             req = await build_request(
-                "host.docker.internal:8000/" + f"api/v1/update/request/{_id}",
+                "http://host.docker.internal:5768/" + f"api/v1/update/request/{_id}",
                 data=request_base,
                 method="PUT",
                 access_token=access_token
@@ -221,7 +221,7 @@ async def _send_request(request: Request, _id: int):
 
                 if additional_visitors:
                     await build_request(
-                        "host.docker.internal:8000/" + "api/v1/create/visitors",
+                        "http://host.docker.internal:5768/" + "api/v1/create/visitors",
                         data=additional_visitors,
                         method="POST",
                         access_token=access_token
@@ -229,14 +229,14 @@ async def _send_request(request: Request, _id: int):
 
                 if updated_visitors:
                     await build_request(
-                        "host.docker.internal:8000/" + "api/v1/update/bulk/visitors",
+                        "http://host.docker.internal:5768/" + "api/v1/update/bulk/visitors",
                         data=updated_visitors,
                         method="PUT",
                         access_token=access_token
                     )
                 if deleted_visitors:
                     await build_request(
-                        "host.docker.internal:8000/" + "api/v1/update/bulk/visitors",
+                        "http://host.docker.internal:5768/" + "api/v1/update/bulk/visitors",
                         data=deleted_visitors,
                         method="PUT",
                         access_token=access_token
@@ -255,7 +255,7 @@ async def _send_request(request: Request, _id: int):
 
                 if deleted_visitors:
                     await build_request(
-                        "host.docker.internal:8000/" + "api/v1/update/bulk/visitors",
+                        "http://host.docker.internal:5768/" + "api/v1/update/bulk/visitors",
                         data=deleted_visitors,
                         method="PUT",
                         access_token=access_token
@@ -302,7 +302,7 @@ async def _send_request(request: Request, _id: int):
 
                 if additional_cars:
                     await build_request(
-                        "host.docker.internal:8000/" + "api/v1/create/cars",
+                        "http://host.docker.internal:5768/" + "api/v1/create/cars",
                         data=additional_cars,
                         method="POST",
                         access_token=access_token
@@ -310,7 +310,7 @@ async def _send_request(request: Request, _id: int):
 
                 if updated_cars:
                     await build_request(
-                        "host.docker.internal:8000/" + "api/v1/update/bulk/cars",
+                        "http://host.docker.internal:5768/" + "api/v1/update/bulk/cars",
                         data=updated_cars,
                         method="PUT",
                         access_token=access_token
@@ -318,7 +318,7 @@ async def _send_request(request: Request, _id: int):
 
                 if deleted_cars:
                     await build_request(
-                        "host.docker.internal:8000/" + "api/v1/update/bulk/cars",
+                        "http://host.docker.internal:5768/" + "api/v1/update/bulk/cars",
                         data=deleted_cars,
                         method="PUT",
                         access_token=access_token
@@ -335,7 +335,7 @@ async def _send_request(request: Request, _id: int):
 
                 if deleted_cars:
                     await build_request(
-                        "host.docker.internal:8000/" + "api/v1/update/bulk/cars",
+                        "http://host.docker.internal:5768/" + "api/v1/update/bulk/cars",
                         data=deleted_cars,
                         method="PUT",
                         access_token=access_token
@@ -366,7 +366,7 @@ async def editing(request: Request, _id: int):
     form = await UpdateRequestForm.from_formdata(request)
 
     _request = await build_request(
-        "host.docker.internal:8000/" + f"api/v1/read/request/{_id}",
+        "http://host.docker.internal:5768/" + f"api/v1/read/request/{_id}",
         access_token=access_token,
     )
 

@@ -25,7 +25,7 @@ async def auth(request: Request):
     if await form.validate_on_submit():
         async with httpx.AsyncClient() as client:
             token_response = await client.post(
-                "http://host.docker.internal:8000/" + "api/v1/login",
+                "http://host.docker.internal:5768/" + "api/v1/login",
                 data={
                     "username": form.data["username"],
                     "password": form.data["password"]
